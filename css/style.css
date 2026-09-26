@@ -1,0 +1,26 @@
+*{
+    box-sizing: border-box;
+    font-family: Arial;
+}
+
+body{
+
+}
+
+.game-container {
+    margin: 30px auto;
+    width: 1200px;
+}
+
+.game-header {
+    display: flex;
+    background-color: beige;
+}
+
+.game-main {
+    background-color: antiquewhite;
+}
+
+.game-footer {
+    background-color: bisque;
+}
