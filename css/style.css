@@ -277,6 +277,10 @@ main section {
     height: 534px;
 }
 
+.row-list-pieces {
+    display: flex;
+}
+
 .pokemon-piece {
     width: 42px;
     height: 52px;
@@ -286,11 +290,19 @@ main section {
     background-repeat: no-repeat;
     /*cho các khối nằm liền kề nhau */
     display: inline-block;
-    border: 1px solid var(--secondary-text-color);
+    border: 2px solid var(--bg-color);
+    border-radius: 5px;
 }
 
-.row-list-pieces {
-    display: flex;
+.pokemon-piece:hover {
+    box-shadow: 0 10px 20px var(--main-text-color);
+    border: 1px solid var(--main-text-color);
+    cursor: pointer;
+}
+
+.pokemon-piece.selected {
+    filter: brightness(40%);
+    pointer-events: none;
 }
 
 /* ----------- FOOTER ----------- */

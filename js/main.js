@@ -37,6 +37,8 @@ function spawnPokemon() {
             `-${pokemonId * 40}px 0`
         )
 
+        piece.attr('data-pokemon-id', pokemonId);
+
         // NÊẾU NHƯ NÓ LÀ HÀNG MỚI THÌ THÊM THẺ DIV HÀNG MỚI
         if (index % 16 === 0) {
             const row = $('<div>');
@@ -50,8 +52,6 @@ function spawnPokemon() {
         // THÊM PIECE VÀO DIV ROW
         row.append(piece);
     })
-
-    console.log("Số Pokémon:", pokemonPool.length);
 
 }
 
