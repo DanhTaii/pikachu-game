@@ -26,6 +26,7 @@ span {
     --timer-color: #1CB3DD;
     --color-yellow: #F8C505;
     --color-orange: #FFA000;
+    --color-green: #059669;
 
     --main-text-color: #E6E9ED;
     --secondary-text-color: #94A3B8;
@@ -132,7 +133,7 @@ main section {
     font-weight: bold;
 }
 
-.game-score i{
+.game-score i {
     color: var(--color-yellow);
 }
 
@@ -205,7 +206,7 @@ main section {
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
 }
 
-.suggest-btn i{
+.suggest-btn i {
     color: var(--color-yellow);
 }
 
@@ -216,6 +217,53 @@ main section {
 .pause-btn i {
     color: var(--color-orange);
 }
+
+/* LEVEL PANEL*/
+
+.level-title i {
+    color: var(--color-orange);
+}
+
+.level-subtitle {
+    border: 1px solid var(--border-line-color);
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.separator {
+    padding: 10px;
+    border-bottom: 1px solid var(--border-line-color);
+}
+
+.level-body ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.level-list__item-container {
+    display: flex;
+    gap: 10px;
+    background-color: var(--bg-color);
+}
+
+.level-list__item-container i {
+    font-size: 25px;
+}
+
+
+.level-list__item-container i.fa-circle-check {
+    color: var(--color-green);
+}
+
+.level-list__item-container i.fa-circle-play {
+    color: var(--color-yellow);
+}
+
+.level-list__item-container i.fa-lock {
+    color: var(--secondary-text-color);
+}
+
 
 /* ----------- FOOTER ----------- */
 .game-footer {
