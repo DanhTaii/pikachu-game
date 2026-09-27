@@ -10,61 +10,67 @@
 </head>
 <body>
 
-<div class="game-container">
+<div class="game-container container">
     <header class="game-header">
-        <section>
-            BÀN
+        <section class="game-logo fw-bold text-lg-center">
+            <img class="game-icon" src="../assets/img/pikachu.png" alt="Pikachu">
+            <h4 class="fw-bold mt-2">PikaMatch Arcade</h4>
         </section>
 
-
+        <section class="game-utility">
+            <i class="fa-solid fa-volume"></i>
+        </section>
     </header>
 
     <main class="game-main">
 
-        <!-- 1. Test Bootstrap CSS & FontAwesome -->
-        <h2 class="text-primary mb-4">
-            <i class="fa-solid fa-rocket fa-bounce"></i>
-            Nếu chữ màu xanh và có icon tên lửa đang nhảy, CSS & FontAwesome đã nhận!
-        </h2>
+        <section class="game-intro row g-0">
+            <div class="current-level col-2">
+                <span class="current-level__title">MÀN </span>
+                <span class="current-level__value">1 / 6</span>
+            </div>
 
-        <!-- 2. Test Bootstrap JS -->
-        <div class="dropdown mb-4">
-            <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                Bấm vào đây test Bootstrap JS
-            </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Menu sổ xuống thành công</a></li>
-            </ul>
-        </div>
+            <div class="game-score col-2">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
 
-        <!-- 3. Test jQuery -->
-        <button id="btn-jquery" class="btn btn-warning">Bấm vào đây test jQuery</button>
-        <div id="box-jquery" class="mt-3 p-3 bg-danger text-white rounded" style="display: none;">
-            jQuery hoạt động ngon lành! (Dùng hiệu ứng slideDown)
-        </div>
+            <div class="game-timer col-4">
+                <div class="game-timer__text">
+                    <i class="fa-solid fa-clock"></i>
+                    <span class="game-timer__text-value"></span>
+                </div>
+                <div class="game-timer__value">
+                    <div class="game-timer__current-value"></div>
+                </div>
+            </div>
+        </section>
 
-        <div class="cell">
-            <img src="../assets/pokemons/pikachu.png" alt="Pikachu">
-        </div>
+        <section class="level-panel row g-0">
+            <div class="game-level col-2 pe-3">
+                <div class="level-content box-container__shadow p-3">LEVEL 1</div>
+            </div>
 
-        <div class="cell">
-            <img src="../assets/pokemons/bulbasaur.png" alt="Bulbasaur">
-        </div>
+            <div class="game-board  col-10">
+                <div class="board-content box-container__shadow p-3">PIKKK</div>
+            </div>
+        </section>
 
-        <div class="cell">
-            <img src="../assets/pokemons/charmander.png" alt="Charmander">
-        </div>
-
-        <div class="cell">
-            <img src="../assets/pokemons/squirtle.png" alt="Squirtle">
-        </div>
+        <section class="game-controls box-container__shadow row g-0 p-3">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-primary pe-1">Gợi ý</button>
+                <button type="button" class="btn btn-primary">Đổi vị trí</button>
+                <button type="button" class="btn btn-primary">Tạm dừng</button>
+                <button type="button" class="btn btn-primary">Chơi lại</button>
+                <button type="button" class="btn btn-primary">Bỏ qua</button>
+            </div>
+        </section>
 
     </main>
 
     <footer class="game-footer">
-        <i class="fa-brands fa-facebook"></i>
-        <img src="../assets/pokemons/pikachu.png" alt="Pikachu">
-        ÂM THANH
+        <div class="game-footer-content row g-0">
+            <span>© Copyright 2010 - 2026 PikaMatch.net</span>
+        </div>
     </footer>
 
 </div>
@@ -73,13 +79,5 @@
 <script src="../assets/bootstrap/bootstrap.bundle.min.js"></script>
 <script src="../js/main.js"></script>
 
-<!-- Code dùng thử jQuery -->
-<script>
-    $(document).ready(function() {
-        $("#btn-jquery").click(function() {
-            $("#box-jquery").slideToggle("fast");
-        });
-    });
-</script>
 </body>
 </html>
