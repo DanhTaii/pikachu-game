@@ -23,48 +23,65 @@
     </header>
 
     <main class="game-main">
-
-        <section class="game-intro row g-0">
-            <div class="current-level col-2">
-                <span class="current-level__title">MÀN </span>
-                <span class="current-level__value">1 / 6</span>
-            </div>
-
-            <div class="game-score col-2">
-                <i class="fa-solid fa-trophy"></i>
-            </div>
-
-            <div class="game-timer col-4">
-                <div class="game-timer__text">
-                    <i class="fa-solid fa-clock"></i>
-                    <span class="game-timer__text-value"></span>
+        <section class="game-intro game-box">
+            <div class="game-intro__container">
+                <div class="current-level game-box">
+                    <span class="current-level__title">MÀN</span>
+                    <span class="current-level__value">1</span>
                 </div>
-                <div class="game-timer__value">
-                    <div class="game-timer__current-value"></div>
+
+                <div class="game-score game-box d-flex align-items-center justify-content-center">
+                    <i class="fa-solid fa-trophy me-3"></i>
+                    <div class="score">
+                        <span>ĐIỂM</span>
+                        <span>1,0000</span>
+                    </div>
+                </div>
+
+                <div class="game-timer game-box">
+                    <div class="game-timer__text mb-2">
+                        <i class="fa-regular fa-alarm-clock"></i>
+                        <span class="game-timer__text-value fw-bold">2:20</span>
+                    </div>
+                    <div class="game-timer__value">
+                        <div class="game-timer__current-value"></div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="level-panel row g-0">
-            <div class="game-level col-2 pe-3">
+        <section class="game-body row g-0">
+            <div class="level-panel col-3 pe-3">
                 <div class="level-content box-container__shadow p-3">LEVEL 1</div>
             </div>
 
-            <div class="game-board  col-10">
+            <div class="game-board col-9">
                 <div class="board-content box-container__shadow p-3">PIKKK</div>
             </div>
         </section>
 
-        <section class="game-controls box-container__shadow row g-0 p-3">
-            <div class="btn-group" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-primary pe-1">Gợi ý</button>
-                <button type="button" class="btn btn-primary">Đổi vị trí</button>
-                <button type="button" class="btn btn-primary">Tạm dừng</button>
-                <button type="button" class="btn btn-primary">Chơi lại</button>
-                <button type="button" class="btn btn-primary">Bỏ qua</button>
-            </div>
+        <section
+                class="game-controls box-container__shadow row g-0 p-3 d-flex justify-content-between align-items-center">
+            <button type="button" class="btn col-2 me-1">
+                <i class="fa-solid fa-lightbulb"></i> Gợi ý
+            </button>
+            <button type="button" class="btn col-2 me-1">
+                <i class="fa-solid fa-shuffle"></i>
+                Đổi vị trí
+            </button>
+            <button type="button" class="btn col-2 me-1">
+                <i class="fa-solid fa-pause"></i>
+                Tạm dừng
+            </button>
+            <button type="button" class="btn col-2 me-1">
+                <i class="fa-solid fa-rotate-left"></i>
+                Chơi lại
+            </button>
+            <button type="button" class="btn col-2 me-1">
+                <i class="fa-solid fa-forward-fast"></i>
+                Bỏ qua
+            </button>
         </section>
-
     </main>
 
     <footer class="game-footer">
