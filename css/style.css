@@ -264,6 +264,34 @@ main section {
     color: var(--secondary-text-color);
 }
 
+/* BOARD */
+
+.board-content {
+    padding: 64px 134px !important;
+    width: 942px !important;
+    height: 600px !important;
+}
+
+.board__container {
+    width: 743px;
+    height: 534px;
+}
+
+.pokemon-piece {
+    width: 42px;
+    height: 52px;
+
+    background-image: url("../assets/img/pieces-sprite.png");
+    /*ngăn ảnh lặp*/
+    background-repeat: no-repeat;
+    /*cho các khối nằm liền kề nhau */
+    display: inline-block;
+    border: 1px solid var(--secondary-text-color);
+}
+
+.row-list-pieces {
+    display: flex;
+}
 
 /* ----------- FOOTER ----------- */
 .game-footer {
