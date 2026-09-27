@@ -14,11 +14,13 @@
     <header class="game-header">
         <section class="game-logo fw-bold text-lg-center">
             <img class="game-icon" src="../assets/img/pikachu.png" alt="Pikachu">
-            <h4 class="fw-bold mt-2">PikaMatch Arcade</h4>
+            <h4 class="fw-bold mt-2 text-light">PikaMatch Arcade</h4>
         </section>
 
         <section class="game-utility">
-            <i class="fa-solid fa-volume"></i>
+            <button class="utility-items">
+                <i class="fa-solid fa-volume"></i>
+            </button>
         </section>
     </header>
 
@@ -26,15 +28,23 @@
         <section class="game-intro game-box">
             <div class="game-intro__container">
                 <div class="current-level game-box">
-                    <span class="current-level__title">MÀN</span>
-                    <span class="current-level__value">1</span>
+                    <span class="current-level__title text-light">MÀN</span>
+                    <span class="current-level__value text-dark-gray">1</span>
                 </div>
 
                 <div class="game-score game-box d-flex align-items-center justify-content-center">
                     <i class="fa-solid fa-trophy me-3"></i>
                     <div class="score">
-                        <span>ĐIỂM</span>
-                        <span>1,0000</span>
+                        <span class="score-title text-light">ĐIỂM</span>
+                        <span class="score-value">1,0000</span>
+                    </div>
+                </div>
+
+                <div class="game-score record game-box d-flex align-items-center justify-content-center">
+                    <i class="fa-solid fa-medal me-3"></i>
+                    <div class="score">
+                        <span class="score-title text-light">KỶ LỤC</span>
+                        <span class="score-value">1,0000</span>
                     </div>
                 </div>
 
@@ -51,34 +61,34 @@
         </section>
 
         <section class="game-body row g-0">
-            <div class="level-panel col-3 pe-3">
-                <div class="level-content box-container__shadow p-3">LEVEL 1</div>
+            <div class="level-panel  col-3 pe-3">
+                <div class="level-content game-box box-container__shadow">LEVEL 1</div>
             </div>
 
             <div class="game-board col-9">
-                <div class="board-content box-container__shadow p-3">PIKKK</div>
+                <div class="board-content game-box box-container__shadow">PIKKK</div>
             </div>
         </section>
 
         <section
-                class="game-controls box-container__shadow row g-0 p-3 d-flex justify-content-between align-items-center">
-            <button type="button" class="btn col-2 me-1">
+                class="game-controls game-box box-container__shadow row g-0 p-3 d-flex justify-content-between align-items-center">
+            <button type="button" class="suggest-btn btn col-2 me-1">
                 <i class="fa-solid fa-lightbulb"></i> Gợi ý
             </button>
-            <button type="button" class="btn col-2 me-1">
+            <button type="button" class="shuffle-btn btn col-2 me-1">
                 <i class="fa-solid fa-shuffle"></i>
-                Đổi vị trí
+                Hoán đổi
             </button>
-            <button type="button" class="btn col-2 me-1">
-                <i class="fa-solid fa-pause"></i>
+            <button type="button" class="pause-btn btn col-2 me-1">
+                <i class="fa-regular fa-circle-pause"></i>
                 Tạm dừng
             </button>
             <button type="button" class="btn col-2 me-1">
-                <i class="fa-solid fa-rotate-left"></i>
+                <i class="fa-solid fa-rotate-left text-dark-gray"></i>
                 Chơi lại
             </button>
             <button type="button" class="btn col-2 me-1">
-                <i class="fa-solid fa-forward-fast"></i>
+                <i class="fa-solid fa-forward-fast text-dark-gray"></i>
                 Bỏ qua
             </button>
         </section>

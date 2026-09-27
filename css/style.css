@@ -3,14 +3,40 @@
     font-family: 'Arial', Helvetica, sans-serif;
 }
 
+span {
+    color: #CBD5E1;
+}
+
 :root {
-    --header-footer-color: #F0F3FF;
-    --bg-color: #F9F9FF;
-    --box-color: white;
-    --btn-bg-color: #E7EEFF;
-    --btn-border-color: #c6cff3;
+    /*--header-footer-color: #F0F3FF;*/
+    /*--bg-color: #F9F9FF;*/
+    /*--box-color: white;*/
+    /*--btn-bg-color: #E7EEFF;*/
+    /*--btn-border-color: #c6cff3;*/
+    /*--bg-shadow-color: rgba(0, 0, 0, 0.2);*/
+    /*--timer-color: #006782;*/
+
+    --header-footer-color: #151D2D;
+    --bg-color: #0B1120;
+    --box-color: #151D2E;
+    --btn-bg-color: #151D2E;
+    --border-line-color: #253349;
     --bg-shadow-color: rgba(0, 0, 0, 0.2);
-    --timer-color: #006782;
+
+    --timer-color: #1CB3DD;
+    --color-yellow: #F8C505;
+    --color-orange: #FFA000;
+
+    --main-text-color: #E6E9ED;
+    --secondary-text-color: #94A3B8;
+}
+
+.text-light {
+    color: var(--main-text-color);
+}
+
+.text-dark-gray {
+    color: var(--secondary-text-color);
 }
 
 .game-container {
@@ -20,6 +46,7 @@
 .game-box {
     padding: 10px !important;
     border-radius: 10px;
+    border: 1px solid var(--border-line-color);
 }
 
 /* ----------- HEADER ----------- */
@@ -27,9 +54,24 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 8px;
-    border-bottom: 1px solid lightgray;
+    padding: 8px 15px;
+    border-bottom: 1px solid var(--border-line-color);
     background-color: var(--header-footer-color);
+}
+
+.utility-items {
+    display: flex;
+    height: 30px;
+    width: 30px;
+    align-items: center;
+    background-color: var(--box-color);
+    color: var(--secondary-text-color);
+    border: 1px solid var(--border-line-color);
+    border-radius: 50%;
+}
+
+.utility-items i {
+    /*padding: 10px;*/
 }
 
 .game-icon {
@@ -74,12 +116,12 @@ main section {
     font-weight: bold;
     background-color: var(--bg-color);
     padding: 10px;
-    width: 80px;
+    width: 20%;
 }
 
 .game-score {
     background-color: var(--bg-color);
-    width: 100px;
+    width: 20%;
 
 }
 
@@ -90,32 +132,46 @@ main section {
     font-weight: bold;
 }
 
+.game-score i{
+    color: var(--color-yellow);
+}
+
+.game-score .score .score-value {
+    color: var(--color-yellow);
+}
+
+.game-score .record {
+    width: 20%;
+
+}
+
 .game-timer {
-    /*flex: 1;*/
+    width: 40%;
     background-color: var(--box-color);
 }
 
-.game-timer__text i{
+.game-timer__text i {
     color: var(--timer-color);
 }
 
 .game-timer__value {
     position: relative;
-    width: 300px;
+    width: 100%;
     height: 10px;
     background-color: var(--bg-color);
     box-shadow: inset 0 1px 3px var(--bg-shadow-color);
     border-radius: 50px;
+    border: 2px solid var(--border-line-color);
 }
 
 .game-timer__current-value {
     position: absolute;
     background-color: var(--timer-color);
-    width: 200px;
+    width: 80%;
     border-radius: 50px;
     height: 6px;
-    top: 2px;
-    left: 2px;
+    top: 0;
+    left: 0;
     z-index: 100;
 }
 
@@ -140,12 +196,25 @@ main section {
 .game-controls button {
     background-color: var(--btn-bg-color);
     border-radius: 10px;
-    border: 1px solid var(--btn-border-color);
+    border: 1px solid var(--border-line-color);
     font-weight: 700;
+    color: var(--main-text-color);
 }
 
 .game-controls button:hover {
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+.suggest-btn i{
+    color: var(--color-yellow);
+}
+
+.shuffle-btn i {
+    color: var(--timer-color);
+}
+
+.pause-btn i {
+    color: var(--color-orange);
 }
 
 /* ----------- FOOTER ----------- */
@@ -153,5 +222,5 @@ main section {
     text-align: center;
     background-color: var(--header-footer-color);
     padding: 20px;
-    border-top: 1px solid lightgray;
+    border-top: 1px solid var(--border-line-color);
 }
