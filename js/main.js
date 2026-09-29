@@ -1,4 +1,8 @@
-const pokemonType = 36;
+import Board from "./board.js";
+import {BOARD_COLS, BOARD_ROWS, PIECE_SIZE, POKEMON_TYPES} from "./utils/constants.js";
+import "./mouse-handle.js";
+
+let gameBoard = new Board(BOARD_ROWS, BOARD_COLS);
 
 function shuffle(array) {
     for (let i = array.length - 1; i >= 0; i--) {
@@ -10,49 +14,65 @@ function shuffle(array) {
 }
 
 function spawnPokemon() {
-    const board = $('#pokemonBoard')
-
     let pokemonPool = [];
 
-    for (let i = 0; i < pokemonType; i++) {
+    for (let i = 0; i < POKEMON_TYPES; i++) {
         // THÊM 2 CẶP VAO
-        pokemonPool.push(i);
-        pokemonPool.push(i);
-        pokemonPool.push(i);
-        pokemonPool.push(i);
+        pokemonPool.push(i, i, i, i);
     }
-
     shuffle(pokemonPool);
+    gameBoard.fillBoard(pokemonPool);
+    renderBoard();
+    // gameBoard.printMatrix();
+}
 
-    pokemonPool.forEach(function (pokemonId, index) {
-        // TẠO RA THẺ DIV
-        const piece = $('<div>');
+function renderBoard() {
+    const board = $('#pokemonBoard');
+    board.empty();
 
-        // THÊM CLASS CSS CỦA POKEMON PIECE VÀO
-        piece.addClass('pokemon-piece');
+    gameBoard.getMatrix().forEach(
+        function (row, rowIndex) {
+            // TẠO THẺ DIV ROW
+            const rowDiv = $('<div>');
+            rowDiv.addClass('row-list-pieces col-auto g-0');
+            // THÊM VÀO TABLE CỦA DIV
+            board.append(rowDiv);
 
-        // THÊM INLINE CSS VÀO POKEMON PIECE
-        piece.css(
-            'background-position',
-            `-${pokemonId * 40}px 0`
-        )
+            // DUYỆT CÁC PHẦN TỬ TRONG ROW CỦA MAT TRẬN
+            row.forEach(
+                function (piece, colIndex) {
+                    // NẾU QUÂN CÓ THÌ BỎ QUA
+                    if (piece === null) {
+                        return;
+                    }
 
-        piece.attr('data-pokemon-id', pokemonId);
+                    // KHAI BÁO GIÁ TRỊ CỦA QUÂN
+                    const currentPieceId = piece.getId();
+                    const currentPieceRow = piece.getPosition().row;
+                    const currentPieceCol = piece.getPosition().col;
 
-        // NÊẾU NHƯ NÓ LÀ HÀNG MỚI THÌ THÊM THẺ DIV HÀNG MỚI
-        if (index % 16 === 0) {
-            const row = $('<div>');
-            row.addClass('row-list-pieces col-auto g-0')
-            board.append(row);
-        }
+                    // TẠO RA THẺ DIV
+                    const pieceDiv = $('<div>');
 
-        // KIẾM THẺ DIV HÀNG CUỐI CÙNG
-        const row = board.children().last();
+                    // THÊM CLASS CSS CỦA POKEMON PIECE VÀO
+                    pieceDiv.addClass('pokemon-piece');
 
-        // THÊM PIECE VÀO DIV ROW
-        row.append(piece);
-    })
+                    // THÊM INLINE CSS VÀO POKEMON PIECE
+                    pieceDiv.css(
+                        'background-position',
+                        `-${currentPieceId * PIECE_SIZE}px 0`
+                    )
 
+                    // THÊM THUỘC TÍNH CỦA PIECE VÀO THẺ DIV
+                    pieceDiv.attr('data-id', currentPieceId);
+                    pieceDiv.attr('data-row', currentPieceRow);
+                    pieceDiv.attr('data-col', currentPieceCol);
+
+                    // THÊM PIECE VÀO DIV ROW
+                    rowDiv.append(pieceDiv);
+                }
+            )
+        })
 }
 
 $(document).ready(function () {
