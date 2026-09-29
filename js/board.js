@@ -59,7 +59,7 @@ export default class Board {
         return this.matrix[row][col]
     }
 
-    isEmpty(row, col) {
+    isCellEmpty(row, col) {
         return this.getPiece(row, col) === null;
     }
 
@@ -79,5 +79,56 @@ export default class Board {
         );
 
         console.table(displayMatrix);
+    }
+
+    canConnectStraight(piece1, piece2) {
+        if (piece1.getId() !== piece2.getId()) {
+            return false;
+        }
+
+        let pr1 = piece1.getPosition().row;
+        let pc1 = piece1.getPosition().col;
+
+        let pr2 = piece2.getPosition().row;
+        let pc2 = piece2.getPosition().col;
+
+        console.log("PIECE 1:", pr1, pc1);
+        console.log("PIECE 2:", pr2, pc2);
+
+        console.log("ĐK CÙNG HÀNG");
+        if (pr1 === pr2) {
+            console.log("CÙNG HÀNG");
+            const startCol = Math.min(pc1, pc2);
+            const endCol = Math.max(pc1, pc2);
+
+            for (let c = startCol + 1; c < endCol; c++) {
+                if (!this.isCellEmpty(pr1, c)) {
+                    console.log("SAI");
+                    return false;
+                }
+            }
+
+            console.log("ĐÚNG");
+            return true;
+        }
+
+        console.log("ĐK CÙNG CỘT");
+        if (pc1 === pc2) {
+            console.log("CÙNG CỘT");
+            const startRow = Math.min(pr1, pr2);
+            const endRow = Math.max(pr1, pr2);
+
+            for (let r = startRow + 1; r < endRow; r++) {
+                if (!this.isCellEmpty(r, pc1)) {
+                    console.log("SAI");
+                    return false;
+                }
+            }
+            console.log("ĐÚNG");
+            return true;
+        }
+
+        console.log("SAI");
+        return false;
     }
 }

@@ -1,8 +1,16 @@
 import Board from "./board.js";
 import {BOARD_COLS, BOARD_ROWS, PIECE_SIZE, POKEMON_TYPES} from "./utils/constants.js";
-import "./mouse-handle.js";
+import SoundHandler from "./sound-handler.js";
+import MouseHandler from "./mouse-handler.js";
 
 let gameBoard = new Board(BOARD_ROWS, BOARD_COLS);
+
+let soundManager = new SoundHandler();
+
+let mouseHandler = new MouseHandler(
+    gameBoard,
+    soundManager
+);
 
 function shuffle(array) {
     for (let i = array.length - 1; i >= 0; i--) {
@@ -23,7 +31,7 @@ function spawnPokemon() {
     shuffle(pokemonPool);
     gameBoard.fillBoard(pokemonPool);
     renderBoard();
-    // gameBoard.printMatrix();
+    gameBoard.printMatrix();
 }
 
 function renderBoard() {
