@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../assets/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="../assets/bootstrap/bootstrap.min.css">
+    <link rel="icon" type="image/png" href="../assets/img/favicon.jpg">
 </head>
 <body>
 
@@ -14,7 +15,7 @@
     <header class="game-header">
         <section class="game-logo fw-bold text-lg-center">
             <img class="game-icon" src="../assets/img/pikachu.png" alt="Pikachu">
-            <h4 class="fw-bold mt-2 text-light">PikaMatch Arcade</h4>
+            <h4 class="fw-bold mt-2 text-light ms-2">PikaMatch Arcade</h4>
         </section>
 
         <section class="game-utility">
@@ -27,31 +28,31 @@
     <main class="game-main">
         <section class="game-intro game-box">
             <div class="game-intro__container">
-                <div class="current-level game-box">
+                <div class="game-info-value current-level game-box">
                     <span class="current-level__title text-light">MÀN</span>
                     <span class="current-level__value text-dark-gray">1</span>
                 </div>
 
                 <div class="game-score game-box d-flex align-items-center justify-content-center">
                     <i class="fa-solid fa-trophy me-3"></i>
-                    <div class="score">
+                    <div class="game-info-value score">
                         <span class="score-title text-light">ĐIỂM</span>
-                        <span class="score-value">1,0000</span>
+                        <span class="score-value">0</span>
                     </div>
                 </div>
 
                 <div class="game-score record game-box d-flex align-items-center justify-content-center">
                     <i class="fa-solid fa-medal me-3"></i>
-                    <div class="score">
+                    <div class="game-info-value score">
                         <span class="score-title text-light">KỶ LỤC</span>
-                        <span class="score-value">1,0000</span>
+                        <span class="score-value">0</span>
                     </div>
                 </div>
 
                 <div class="game-timer game-box">
                     <div class="game-timer__text mb-2">
                         <i class="fa-regular fa-alarm-clock"></i>
-                        <span class="game-timer__text-value fw-bold">2:20</span>
+                        <span class="game-timer__text-value fw-bold text-light">2:20</span>
                     </div>
                     <div class="game-timer__value">
                         <div class="game-timer__current-value"></div>
@@ -68,67 +69,64 @@
                             <i class="fs-5 fa-regular fa-map"></i>
                             <span class="fs-5 text-light fw-bold">Bản đồ</span>
                         </div>
-                        <div class="level-subtitle text-light d-flex align-items-center gap-1">
-                            <span class="level-current text-light fw-bold">3</span>
-                            /
-                            <span class="level-max text-light fw-bold">6</span>
-                        </div>
                     </div>
 
                     <div class="separator"></div>
 
-                    <div class="level-body">
-                        <ul class="level-list">
-                            <li class="level-list__item">
-                                <div class="level-list__item-container game-box mt-2">
-                                    <i class="fa-solid fa-circle-check"></i>
-                                    <span class="level-list__item-title fw-bold text-light">
+                    <div class="level-body mt-2">
+                        <ul class="level-list mt-4">
+                            <li class="level-list__item" data-level="1">
+                                <button type="button" class="game-btn active">
+                                    <i class="fa-solid fa-circle-play "></i>
+                                    <span class="fw-bold text-light">
                                         Màn 1
                                     </span>
-                                </div>
+                                </button>
                             </li>
-                            <li class="level-list__item">
-                                <div class="level-list__item-container game-box mt-2">
+
+                            <li class="level-list__item" data-level="2">
+                                <button type="button" class="game-btn">
                                     <i class="fa-solid fa-circle-play"></i>
-                                    <span class="level-list__item-title fw-bold text-light">
+                                    <span class="fw-bold text-light">
                                         Màn 2
                                     </span>
-                                </div>
+                                </button>
                             </li>
-                            <li class="level-list__item">
-                                <div class="level-list__item-container game-box mt-2">
-                                    <i class="fa-solid fa-lock"></i>
-                                    <span class="level-list__item-title fw-bold text-light">
+
+                            <li class="level-list__item" data-level="3">
+                                <button type="button" class="game-btn">
+                                    <i class="fa-solid fa-circle-play"></i>
+                                    <span class="fw-bold text-light">
                                         Màn 3
                                     </span>
-                                </div>
+                                </button>
                             </li>
 
-                            <li class="level-list__item">
-                                <div class="level-list__item-container game-box mt-2">
-                                    <i class="fa-solid fa-lock"></i>
-                                    <span class="level-list__item-title fw-bold text-light">
+                            <li class="level-list__item" data-level="4">
+                                <button type="button" class="game-btn">
+                                    <i class="fa-solid fa-circle-play"></i>
+                                    <span class="fw-bold text-light">
+                                            Màn 4
+                                        </span>
+                                </button>
+                            </li>
+
+                            <li class="level-list__item" data-level="5">
+                                <button type="button" class="game-btn">
+                                    <i class="fa-solid fa-circle-play"></i>
+                                    <span class="fw-bold text-light">
                                         Màn 5
                                     </span>
-                                </div>
+                                </button>
                             </li>
 
-                            <li class="level-list__item">
-                                <div class="level-list__item-container game-box mt-2">
-                                    <i class="fa-solid fa-lock"></i>
-                                    <span class="level-list__item-title fw-bold text-light">
-                                        Màn 4
-                                    </span>
-                                </div>
-                            </li>
-
-                            <li class="level-list__item">
-                                <div class="level-list__item-container game-box mt-2">
-                                    <i class="fa-solid fa-lock"></i>
-                                    <span class="level-list__item-title fw-bold text-light">
+                            <li class="level-list__item" data-level="6">
+                                <button type="button" class="game-btn">
+                                    <i class="fa-solid fa-circle-play"></i>
+                                    <span class="fw-bold text-light">
                                         Màn 6
                                     </span>
-                                </div>
+                                </button>
                             </li>
                         </ul>
                     </div>
@@ -137,170 +135,8 @@
 
             <div class="game-board col-9">
                 <div class="board-content game-box box-container__shadow">
-                    <div class="board__container">
-                        <!-- Cột chứa 1 mảnh ghép trên bàn chơi -->
-                        <div class="row-list-pieces col-auto g-0">
-                            <div class="pokemon-piece" style="background-position: 0 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -40px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -80px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -120px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -160px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -200px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -240px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -280px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -320px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -360px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -400px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -440px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -480px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -520px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -560px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -600px 0;"></div>
-                        </div>
-                        <div class="row-list-pieces col-auto g-0">
-                            <div class="pokemon-piece" style="background-position: 0 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -40px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -80px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -120px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -160px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -200px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -240px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -280px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -320px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -360px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -400px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -440px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -480px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -520px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -560px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -600px 0;"></div>
-                        </div>
-                        <div class="row-list-pieces col-auto g-0">
-                            <div class="pokemon-piece" style="background-position: 0 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -40px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -80px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -120px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -160px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -200px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -240px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -280px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -320px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -360px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -400px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -440px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -480px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -520px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -560px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -600px 0;"></div>
-                        </div>
-                        <div class="row-list-pieces col-auto g-0">
-                            <div class="pokemon-piece" style="background-position: 0 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -40px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -80px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -120px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -160px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -200px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -240px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -280px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -320px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -360px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -400px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -440px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -480px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -520px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -560px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -600px 0;"></div>
-                        </div>
-                        <div class="row-list-pieces col-auto g-0">
-                            <div class="pokemon-piece" style="background-position: 0 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -40px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -80px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -120px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -160px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -200px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -240px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -280px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -320px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -360px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -400px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -440px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -480px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -520px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -560px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -600px 0;"></div>
-                        </div>
-                        <div class="row-list-pieces col-auto g-0">
-                            <div class="pokemon-piece" style="background-position: 0 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -40px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -80px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -120px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -160px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -200px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -240px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -280px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -320px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -360px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -400px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -440px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -480px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -520px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -560px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -600px 0;"></div>
-                        </div>
-                        <div class="row-list-pieces col-auto g-0">
-                            <div class="pokemon-piece" style="background-position: 0 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -40px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -80px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -120px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -160px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -200px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -240px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -280px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -320px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -360px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -400px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -440px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -480px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -520px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -560px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -600px 0;"></div>
-                        </div>
-                        <div class="row-list-pieces col-auto g-0">
-                            <div class="pokemon-piece" style="background-position: 0 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -40px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -80px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -120px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -160px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -200px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -240px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -280px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -320px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -360px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -400px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -440px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -480px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -520px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -560px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -600px 0;"></div>
-                        </div>
-                        <div class="row-list-pieces col-auto g-0">
-                            <div class="pokemon-piece" style="background-position: 0 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -40px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -80px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -120px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -160px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -200px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -240px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -280px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -320px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -360px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -400px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -440px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -480px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -520px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -560px 0;"></div>
-                            <div class="pokemon-piece" style="background-position: -600px 0;"></div>
-                        </div>
+                    <div class="board__container" id="pokemon-board">
+                        <div id="connection-layer"></div>
                     </div>
                 </div>
             </div>
@@ -308,24 +144,35 @@
 
         <section
                 class="game-controls game-box box-container__shadow row g-0 p-3 d-flex justify-content-between align-items-center">
-            <button type="button" class="suggest-btn btn col-2 me-1">
-                <i class="fa-solid fa-lightbulb"></i> Gợi ý
+            <button type="button" class="game-btn suggest-btn col-2 me-1">
+                <i class="fa-solid fa-lightbulb"></i>
+                <span class="fw-bold text-light">
+                        Gợi ý
+                    </span>
             </button>
-            <button type="button" class="shuffle-btn btn col-2 me-1">
+            <button type="button" class="game-btn shuffle-btn col-2 me-1">
                 <i class="fa-solid fa-shuffle"></i>
-                Hoán đổi
+                <span class="fw-bold text-light">
+                    Hoán đổi
+                </span>
             </button>
-            <button type="button" class="pause-btn btn col-2 me-1">
+            <button type="button" class="game-btn pause-btn col-2 me-1">
                 <i class="fa-regular fa-circle-pause"></i>
-                Tạm dừng
+                <span class="fw-bold text-light">
+                    Tạm dừng
+                </span>
             </button>
-            <button type="button" class="btn col-2 me-1">
+            <button type="button" class="game-btn col-2 me-1">
                 <i class="fa-solid fa-rotate-left text-dark-gray"></i>
-                Chơi lại
+                <span class="fw-bold text-light">
+                    Chơi lại
+                </span>
             </button>
-            <button type="button" class="btn col-2 me-1">
+            <button type="button" class="game-btn col-2 me-1">
                 <i class="fa-solid fa-forward-fast text-dark-gray"></i>
-                Bỏ qua
+                <span class="fw-bold text-light">
+                    Bỏ qua
+                </span>
             </button>
         </section>
     </main>
@@ -340,7 +187,7 @@
 
 <script src="../assets/jquery/jquery-4.0.0.min.js"></script>
 <script src="../assets/bootstrap/bootstrap.bundle.min.js"></script>
-<script src="../js/main.js"></script>
+<script type="module" src="../js/main.js"></script>
 
 </body>
 </html>
