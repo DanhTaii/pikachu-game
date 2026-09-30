@@ -1,7 +1,7 @@
-import Board from "./board.js";
+import Board from "./models/board.js";
 import {BOARD_COLS, BOARD_ROWS, PIECE_SIZE, POKEMON_TYPES} from "./utils/constants.js";
-import SoundHandler from "./sound-handler.js";
-import MouseHandler from "./mouse-handler.js";
+import SoundHandler from "./handler/sound-handler.js";
+import MouseHandler from "./handler/mouse-handler.js";
 
 let gameBoard = new Board(BOARD_ROWS, BOARD_COLS);
 
@@ -35,8 +35,7 @@ function spawnPokemon() {
 }
 
 function renderBoard() {
-    const board = $('#pokemonBoard');
-    board.empty();
+    const board = $('#pokemon-board');
 
     gameBoard.getMatrix().forEach(
         function (row, rowIndex) {

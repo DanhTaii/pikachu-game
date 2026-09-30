@@ -1,9 +1,11 @@
-import Piece from "./piece.js";
+import Piece from "../models/piece.js";
+import PathDrawer from "../path/path-drawer.js";
 
 export default class MouseHandler {
     constructor(board, soundHandler) {
         this.board = board;
         this.soundHandler = soundHandler;
+        this.pathDrawer = new PathDrawer();
 
         this.firstSelectedPiece = null;
         this.firstPieceId = null;
@@ -14,7 +16,7 @@ export default class MouseHandler {
     }
 
     init() {
-        $('#pokemonBoard').on('click', '.pokemon-piece', (event) => {
+        $('#pokemon-board').on('click', '.pokemon-piece', (event) => {
             const currentPiece = $(event.currentTarget);
             const currentPieceId = currentPiece.data('id');
             const currentPieceRow = currentPiece.data('row');
@@ -35,6 +37,20 @@ export default class MouseHandler {
 
                 if (this.board.canConnectStraight(p1, p2)) {
                     this.soundHandler.playMatch();
+
+                    if (this.firstPieceRow === currentPieceRow) {
+                        this.pathDrawer.drawHorizontalLine(
+                            this.firstSelectedPiece,
+                            currentPiece
+                        );
+                    }
+
+                    if (this.firstPieceCol === currentPieceCol) {
+                        this.pathDrawer.drawVerticalLine(
+                            this.firstSelectedPiece,
+                            currentPiece
+                        );
+                    }
 
                     this.firstSelectedPiece.css('visibility', 'hidden');
                     currentPiece.css('visibility', 'hidden');

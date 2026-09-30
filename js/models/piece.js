@@ -1,4 +1,4 @@
-export default class Piece {
+export default  class Piece {
     constructor(id, row, col) {
         this.id = id;
         this.row = row;
