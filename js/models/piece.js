@@ -1,8 +1,11 @@
-export default  class Piece {
+import Position from "./position.js";
+
+export default class Piece {
     constructor(id, row, col) {
         this.id = id;
         this.row = row;
         this.col = col;
+        this.position = new Position(row, col);
     }
 
     getId() {
@@ -10,10 +13,16 @@ export default  class Piece {
     }
 
     getPosition() {
-        return {
-            row: this.row,
-            col: this.col
-        };
+        return this.position;
     }
+
+    getX() {
+        return this.position.getX();
+    }
+
+    getY() {
+        return this.position.getY();
+    }
+
 
 }
