@@ -121,16 +121,6 @@ export default class Board {
         return false;
     }
 
-    canConnect(piece1, piece2) {
-        console.log('CHỌN LOẠI KẾT NỐI');
-        if (this.canConnectStraight(piece1, piece2) || this.canConnectOneCorner(piece1, piece2)) {
-            this.removePiece(piece1);
-            this.removePiece(piece2)
-            return true;
-        }
-        return false;
-    }
-
     canConnectStraight(piece1, piece2) {
         if (piece1.getId() !== piece2.getId()) {
             return false;
@@ -144,6 +134,18 @@ export default class Board {
 
         console.log("SAI KẾT NỐI THẲNG");
         return false;
+    }
+
+    canCreateCorner(position1, position2, positionCorner) {
+        if (
+            this.isCellEmpty(positionCorner.getX(), positionCorner.getY()) &&
+            this.isClearPath(position1, positionCorner) &&
+            this.isClearPath(position2, positionCorner)
+        ) {
+            console.log('XONG KẾT NỐI 1 GÓC');
+            return positionCorner;
+        }
+        return null;
     }
 
     canConnectOneCorner(piece1, piece2) {
@@ -162,25 +164,112 @@ export default class Board {
         const positionCornerOne = new Position(pr1, pc2);
         const positionCornerTwo = new Position(pr2, pc1);
 
-        if (
-            this.isCellEmpty(pr1, pc2) &&
-            this.isClearPath(piece1.getPosition(), positionCornerOne) &&
-            this.isClearPath(piece2.getPosition(), positionCornerOne)
-        ) {
-            console.log('XONG KẾT NỐI 1 GÓC');
-            return positionCornerOne;
+        const result1 = this.canCreateCorner(piece1.getPosition(), piece2.getPosition(), positionCornerOne);
+        const result2 = this.canCreateCorner(piece1.getPosition(), piece2.getPosition(), positionCornerTwo);
+
+        if (result1 !== null) {
+            return result1;
+        } else if (result2 !== null) {
+            return result2;
+        } else {
+            console.log('SAI KẾT NỐI 1 GÓC');
+            return null;
+        }
+    }
+
+    canConnectTwoCorner(piece1, piece2) {
+        if (piece1.getId() !== piece2.getId()) {
+            return null;
         }
 
-        if (
-            this.isCellEmpty(pr2, pc1) &&
-            this.isClearPath(piece1.getPosition(), positionCornerTwo) &&
-            this.isClearPath(piece2.getPosition(), positionCornerTwo)
-        ) {
-            console.log('XONG KẾT NỐI 1 GÓC');
-            return positionCornerTwo;
+        console.log('CHỌN KẾT NỐI 2 GÓC');
+
+        let pr1 = piece1.getX();
+        let pc1 = piece1.getY();
+
+        let pr2 = piece2.getX();
+        let pc2 = piece2.getY();
+
+        let startRow = Math.min(pr1, pr2);
+        let endRow = Math.max(pr1, pr2);
+
+        let startCol = Math.min(pc1, pc2);
+        let endCol = Math.max(pc1, pc2);
+
+        let positionCornerOne = null;
+        let positionCornerTwo = null;
+
+        console.log(positionCornerOne);
+        console.log(positionCornerTwo);
+        console.log('ĐI VÔ ĐIỀU KIỆN');
+        if (startCol !== endCol) {
+            // CHẠY TỪNG ROW ĐỂ KIỂM TRA ĐƯỜNG NỐI
+            for (let i = startRow; i < endRow; i++) {
+                console.log('KIỂM TRA CÁC DÒNG');
+                // TẠO VỊ TRÍ DÒNG I CỦA CỘT PIECE 1
+                positionCornerOne = new Position(i, pc1);
+
+                // NẾU ĐƯỜNG ĐI ĐẾN ĐÓ TRỐNG THÌ
+                if (this.isClearPath(piece1.getPosition(), positionCornerOne)) {
+
+                    // DUYỆT TỪ CỘT BẮT ĐÂẦU ĐẾN KẾT THÚC
+                    for (let j = startCol + 1; j < endCol; j++) {
+                        // TẠO VỊ TRÍ DÒNG I CỦA CỘT J
+                        positionCornerTwo = new Position(i, j);
+
+                        if (
+                            this.isClearPath(positionCornerOne, positionCornerTwo) &&
+                            this.isClearPath(positionCornerTwo, piece2.getPosition())
+                        ) {
+                            console.log('TRẢ VỀ JSON ĐƯỜNG Z LÊN');
+                            console.log(positionCornerOne);
+                            console.log(positionCornerTwo);
+                            return {
+                                cornerOne: positionCornerOne,
+                                cornerTwo: positionCornerTwo
+                            }
+                        }
+                    }
+                }
+            }
+        } else if (startRow !== endRow) {
+            console.log(positionCornerOne);
+            console.log(positionCornerTwo);
+            // CHẠY TỪNG ROW ĐỂ KIỂM TRA ĐƯỜNG NỐI
+            for (let j = startCol + 1; j < endCol; j++) {
+                console.log('KIỂM TRA Z XUỐNG');
+
+                // TẠO VỊ TRÍ DÒNG CỦA PIECE 1 VÀ CỘT J
+                positionCornerOne = new Position(pr1, j);
+
+                // NẾU ĐƯỜNG ĐI ĐẾN ĐÓ TRỐNG THÌ
+                if (this.isClearPath(piece1.getPosition(), positionCornerOne)) {
+
+                    // DUYỆT TỪ CỘT BẮT ĐÂẦU ĐẾN KẾT THÚC
+                    for (let i = startRow; i < endRow; i++) {
+                        // TẠO VỊ TRÍ DÒNG I CỦA CỘT J
+                        positionCornerTwo = new Position(i, j);
+
+                        if (
+                            this.isClearPath(positionCornerOne, positionCornerTwo) &&
+                            this.isClearPath(positionCornerTwo, piece2.getPosition())
+                        ) {
+                            console.log('TRẢ VỀ JSON ĐƯỜNG Z XUỐNG');
+                            console.log(positionCornerOne);
+                            console.log(positionCornerTwo);
+                            return {
+                                cornerOne: positionCornerOne,
+                                cornerTwo: positionCornerTwo
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            console.log('KHÔNG THỂ NỐI 2 GÓC');
+            return null;
         }
 
-        console.log('SAI KẾT NỐI 1 GÓC');
         return null;
     }
 }

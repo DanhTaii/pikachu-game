@@ -50,6 +50,8 @@ export default class MouseHandler {
                     );
                     this.handleMatch(piece1, piece2, this.firstSelectedPieceUI, currentPieceUI);
                     // XỬ LÝ CHỌN SAI
+                } else if (this.board.canConnectTwoCorner(piece1, piece2) !== null) {
+                    this.handleMatch(piece1, piece2, this.firstSelectedPieceUI, currentPieceUI);
                 } else {
                     this.handleError(piece1, piece2, this.firstSelectedPieceUI, currentPieceUI)
                 }
