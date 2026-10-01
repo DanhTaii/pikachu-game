@@ -1,14 +1,14 @@
 export default class Position {
-    constructor(row, col) {
-        this.row = row;
-        this.col = col;
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
     }
 
-    getRow() {
-        return this.row;
+    getX() {
+        return this.x;
     }
 
-    getCol() {
-        return this.col;
+    getY() {
+        return this.y;
     }
 }

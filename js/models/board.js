@@ -91,11 +91,11 @@ export default class Board {
     }
 
     isClearPath(position1, position2) {
-        let pr1 = position1.getRow();
-        let pc1 = position1.getCol();
+        let pr1 = position1.getX();
+        let pc1 = position1.getY();
 
-        let pr2 = position2.getRow();
-        let pc2 = position2.getCol();
+        let pr2 = position2.getX();
+        let pc2 = position2.getY();
 
         if (pr1 === pr2) {
             const startCol = Math.min(pc1, pc2);
@@ -148,7 +148,7 @@ export default class Board {
 
     canConnectOneCorner(piece1, piece2) {
         if (piece1.getId() !== piece2.getId()) {
-            return false;
+            return null;
         }
 
         console.log('CHỌN KẾT NỐI 1 GÓC');
@@ -162,16 +162,13 @@ export default class Board {
         const positionCornerOne = new Position(pr1, pc2);
         const positionCornerTwo = new Position(pr2, pc1);
 
-        console.log("Góc 1 (pr1, pc2):", pr1, pc2, "Trống?", this.isCellEmpty(pr1, pc2));
-        console.log("Góc 2 (pr2, pc1):", pr2, pc1, "Trống?", this.isCellEmpty(pr2, pc1));
-
         if (
             this.isCellEmpty(pr1, pc2) &&
             this.isClearPath(piece1.getPosition(), positionCornerOne) &&
             this.isClearPath(piece2.getPosition(), positionCornerOne)
         ) {
             console.log('XONG KẾT NỐI 1 GÓC');
-            return true;
+            return positionCornerOne;
         }
 
         if (
@@ -180,10 +177,10 @@ export default class Board {
             this.isClearPath(piece2.getPosition(), positionCornerTwo)
         ) {
             console.log('XONG KẾT NỐI 1 GÓC');
-            return true;
+            return positionCornerTwo;
         }
 
         console.log('SAI KẾT NỐI 1 GÓC');
-        return false;
+        return null;
     }
 }

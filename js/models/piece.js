@@ -17,11 +17,11 @@ export default class Piece {
     }
 
     getX() {
-        return this.row;
+        return this.position.getX();
     }
 
     getY() {
-        return this.col;
+        return this.position.getY();
     }
 
 
