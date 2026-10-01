@@ -35,7 +35,7 @@ export default class MouseHandler {
                 const p1 = new Piece(this.firstPieceId, this.firstPieceRow, this.firstPieceCol);
                 const p2 = new Piece(currentPieceId, currentPieceRow, currentPieceCol);
 
-                if (this.board.canConnectStraight(p1, p2)) {
+                if (this.board.canConnect(p1, p2)) {
                     this.soundHandler.playMatch();
 
                     if (this.firstPieceRow === currentPieceRow) {

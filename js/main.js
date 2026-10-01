@@ -55,8 +55,8 @@ function renderBoard() {
 
                     // KHAI BÁO GIÁ TRỊ CỦA QUÂN
                     const currentPieceId = piece.getId();
-                    const currentPieceRow = piece.getPosition().row;
-                    const currentPieceCol = piece.getPosition().col;
+                    const currentPieceRow = piece.getX();
+                    const currentPieceCol = piece.getY();
 
                     // TẠO RA THẺ DIV
                     const pieceDiv = $('<div>');
