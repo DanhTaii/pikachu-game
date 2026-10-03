@@ -300,6 +300,11 @@ main section {
     pointer-events: none;
 }
 
+.pokemon-piece.highlight {
+    box-shadow: 0 10px 20px var(--color-yellow);
+    border: 2px solid var(--color-yellow);
+}
+
 #pokemon-board {
     position: relative;
 }

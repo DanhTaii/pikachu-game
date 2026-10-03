@@ -246,4 +246,8 @@ export default class GameManager {
             }
         }
     }
+
+    suggestTwoPiece() {
+        return this.board.isStillHaveConnection();
+    }
 }

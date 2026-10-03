@@ -18,6 +18,7 @@ export default class MouseHandler {
         this.handlePieceSelection();
         this.handleLevelSwap();
         this.handleShuffleButton();
+        this.handleHintButton();
     }
 
     resetFirestPieceSelection() {
@@ -114,6 +115,30 @@ export default class MouseHandler {
     handleShuffleButton() {
         $('.shuffle-btn').on('click', (event) => {
             GameManager.getInstance().shuffleRemaining();
+        })
+    }
+
+    handleHintButton() {
+        $('.suggest-btn').on('click', () => {
+
+            const result = GameManager.getInstance().suggestTwoPiece();
+            // console.log(result);
+            if (result === null) {
+                return;
+            }
+
+            // console.log(result);
+            const {pieceOne, pieceTwo} = result;
+            let divPieceOne = $(`#pokemon-board .pokemon-piece[data-row="${pieceOne.getX()}"][data-col="${pieceOne.getY()}"]`);
+            let divPieceTwo = $(`#pokemon-board .pokemon-piece[data-row="${pieceTwo.getX()}"][data-col="${pieceTwo.getY()}"]`);
+
+            divPieceOne.addClass('highlight');
+            divPieceTwo.addClass('highlight');
+
+            setTimeout(() => {
+                divPieceOne.removeClass('highlight');
+                divPieceTwo.removeClass('highlight');
+            }, 600)
         })
     }
 
