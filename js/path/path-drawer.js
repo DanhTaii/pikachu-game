@@ -13,9 +13,9 @@ export default class PathDrawer {
         const rect = piece[0].getBoundingClientRect();
 
         // TÍNH TÂM X CỦA PIECE (Ô)
-        const x = rect.left + rect.width / 2 - boardRect.left;
+        const x = Math.round(rect.left + rect.width / 2 - boardRect.left);
         // TÍNH TÂM Y CỦA PIECE (Ô)
-        const y = rect.top + rect.height / 2 - boardRect.top;
+        const y = Math.round(rect.top + rect.height / 2 - boardRect.top);
 
         return {
             x: x,
@@ -28,7 +28,7 @@ export default class PathDrawer {
 
         if (x1 === x2) {
             // VẼ ĐƯỜNG THẲNG DỌC
-            console.log('VẼ ĐƯỜNG THẲNG NGANG');
+            // console.log('VẼ ĐƯỜNG THẲNG NGANG');
             line.css({
                 // ĐIỂM X BẮT ĐẦU TỪ X1 HOẶC X2 ĐỀU ĐƯỢC DO NÓ ĐÃ CHUNG 1 CỘT
                 left: x1,
@@ -40,8 +40,8 @@ export default class PathDrawer {
                 height: Math.abs(y2 - y1)
             });
         } else if (y1 === y2) {
-            // VẼ ĐƯỜNG THẲNG DỌC
-            console.log('VẼ ĐƯỜNG THẲNG DỌC');
+            // VẼ ĐƯỜNG THẲNG NGANG
+            // console.log('VẼ ĐƯỜNG THẲNG DỌC');
             line.css({
                 // ĐIỂM X BẮT ĐẦU SẼ LÀ TỪ VỊ TRÍ TÂM NHỎ NHẤT VÀ TỪ PHẢI VẼ TỪ TRÁI SANG PHẢI
                 left: Math.min(x1, x2),
@@ -65,11 +65,11 @@ export default class PathDrawer {
     }
 
     drawStraightConnection(piece1, piece2) {
-        console.log('TÍNH TOÁN TÂM CÁC Ô TRÊN GIAO DIỆN')
+        // console.log('TÍNH TOÁN TÂM CÁC Ô TRÊN GIAO DIỆN')
         const centerPiece1 = this.calculateCenterPiece(piece1);
         const centerPiece2 = this.calculateCenterPiece(piece2);
 
-        console.log('VẼ ĐƯỜNG THẲNG')
+        // console.log('VẼ ĐƯỜNG THẲNG')
         this.drawLine(centerPiece1.x, centerPiece1.y, centerPiece2.x, centerPiece2.y);
 
     }
@@ -79,16 +79,25 @@ export default class PathDrawer {
     }
 
     drawOneCornerConnection(piece1, piece2, cornerPosition) {
-        const centerPiece1 = this.calculateCenterPiece(piece1);
-        const centerPiece2 = this.calculateCenterPiece(piece2);
-
         const divCorner = this.getPositionCornerElement(
             cornerPosition.getX(), cornerPosition.getY()
         );
-        const centerCorner = this.calculateCenterPiece(divCorner);
+        this.drawStraightConnection(piece1, divCorner);
+        this.drawStraightConnection(divCorner, piece2);
+    }
 
-        this.drawLine(centerPiece1.x, centerPiece1.y, centerCorner.x, centerCorner.y);
-        this.drawLine(centerCorner.x, centerCorner.y, centerPiece2.x, centerPiece2.y);
+    drawTwoCornerConnection(piece1, piece2, cornerPositionOne, cornerPositionTwo) {
+        const divCornerOne = this.getPositionCornerElement(
+            cornerPositionOne.getX(), cornerPositionOne.getY()
+        );
+
+        const divCornerTwo = this.getPositionCornerElement(
+            cornerPositionTwo.getX(), cornerPositionTwo.getY()
+        );
+
+        this.drawStraightConnection(piece1, divCornerOne);
+        this.drawStraightConnection(divCornerOne, divCornerTwo);
+        this.drawStraightConnection(divCornerTwo, piece2);
     }
 
 }

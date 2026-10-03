@@ -38,18 +38,28 @@ export default class MouseHandler {
                 let positionCornerOne = null;
                 let positionCornerTwo = null;
 
+                let corners = {positionCornerOne, positionCornerTwo};
+
                 // XỬ LÝ KẾT NỐI THẲNG
                 if (this.board.canConnectStraight(piece1, piece2)) {
                     this.pathDrawer.drawStraightConnection(this.firstSelectedPieceUI, currentPieceUI);
                     this.handleMatch(piece1, piece2, this.firstSelectedPieceUI, currentPieceUI);
                     // XỬ LÝ KÊẾT NỐI 1 GÓC
-                } else if ((positionCornerOne = this.board.canConnectOneCorner(piece1, piece2)) !== null) {
+                } else if ((corners.positionCornerOne = this.board.canConnectOneCorner(piece1, piece2)) !== null) {
                     // console.log(positionCornerOne)
                     this.pathDrawer.drawOneCornerConnection(
-                        this.firstSelectedPieceUI, currentPieceUI, positionCornerOne
+                        this.firstSelectedPieceUI, currentPieceUI, corners.positionCornerOne
                     );
                     this.handleMatch(piece1, piece2, this.firstSelectedPieceUI, currentPieceUI);
                     // XỬ LÝ CHỌN SAI
+                } else if ((corners = this.board.canConnectTwoCorner(piece1, piece2)) !== null) {
+                    console.log('BẮT ĐẦU VẼ 2 GÓC')
+                    console.log(corners.positionCornerOne);
+                    console.log(corners.positionCornerTwo);
+                    this.pathDrawer.drawTwoCornerConnection(
+                        this.firstSelectedPieceUI, currentPieceUI, corners.positionCornerOne, corners.positionCornerTwo
+                    );
+                    this.handleMatch(piece1, piece2, this.firstSelectedPieceUI, currentPieceUI);
                 } else {
                     this.handleError(piece1, piece2, this.firstSelectedPieceUI, currentPieceUI)
                 }
