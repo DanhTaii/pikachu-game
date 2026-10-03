@@ -15,6 +15,17 @@ export default class MouseHandler {
     }
 
     init() {
+        this.handlePieceSelection();
+        this.handleLevelSwap();
+        this.handleShuffleButton();
+    }
+
+    resetFirestPieceSelection() {
+        this.firstSelectedPieceUI = null;
+        this.firstSelectedPieceMatrix = null;
+    }
+
+    handlePieceSelection() {
         $('#pokemon-board').on('click', '.pokemon-piece', (event) => {
             const currentPieceUI = $(event.currentTarget);
             const currentPieceMatrix = new Piece(
@@ -67,13 +78,6 @@ export default class MouseHandler {
             }
 
         });
-
-        this.handleLevelSwap()
-    }
-
-    resetFirestPieceSelection() {
-        this.firstSelectedPieceUI = null;
-        this.firstSelectedPieceMatrix = null;
     }
 
     handleMatch(pieceMatrix1, pieceMatrix2, pieceUI1, pieceUI2) {
@@ -103,7 +107,13 @@ export default class MouseHandler {
             const levelIndex = newLevelItem.data('level');
             // console.log(newLevelItem);
             // console.log("LEVEL INDEX TRONG handleLevelSwap: ", levelIndex);
-            GameManager.getInstance().loadLevel(null, levelIndex - 1)
+            GameManager.getInstance().loadLevel(null, levelIndex - 1);
+        })
+    }
+
+    handleShuffleButton() {
+        $('.shuffle-btn').on('click', (event) => {
+            GameManager.getInstance().shuffleRemaining();
         })
     }
 

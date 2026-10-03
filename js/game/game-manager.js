@@ -24,10 +24,14 @@ export default class GameManager {
         this.currentLevelIndex = 0;
     }
 
+    init(matrix) {
+        this.loadLevel(matrix, 0);
+        this.renderListLevel();
+    }
+
     loadLevel(matrix, levelIndex) {
         const board = $('#pokemon-board');
-        board.find('.pokemon-piece').remove();
-        this.renderListLevel();
+        board.find('.row-list-pieces').remove();
 
         if (matrix !== null) {
             this.board = new Board(BOARD_ROWS, BOARD_COLS);
@@ -59,6 +63,54 @@ export default class GameManager {
         return array;
     }
 
+    shuffleRemaining() {
+        let index = 0;
+        // DANH SÁCH CÁC ID CỦA PIECE HIỆN CÒN TRÊN BÀN CỜ
+        let currentPieceIds = [];
+        // DANH SCASH CÁC VỊ TRÍ CỦA LẦN LƯỢT PIECE Ở MẢNG TRÊN CỦA BÀN CỜ
+        let currentPiecePositions = [];
+
+        // DUYỆT QUA BÀN CỜ
+        for (let i = 0; i < this.board.rows; i++) {
+            for (let j = 0; j < this.board.cols; j++) {
+                // LẤY RA VỊ TRÍ HIỆN TẠI
+                let currentPiece = this.board.getPiece(i, j);
+
+                // NẾU NÓ KAHSC NULL THÌ
+                if (currentPiece !== null) {
+                    // THÊM ID CỦA NÓ VÀO MẢNG currentPieceIds
+                    currentPieceIds[index] = currentPiece.getId();
+
+                    // THÊM VỊ TRÍ CỦA NÓ VÀO currentPiecePositions
+                    currentPiecePositions[index] = {
+                        x: currentPiece.getX(),
+                        y: currentPiece.getY()
+                    }
+                    index++;
+                }
+            }
+        }
+
+        // LẤY MẢNG CÁC ID RA, DÙNG SHUFFLE BAN ĐẦU ĐỂ ĐẢO VỊ TRÍ CÁC ID
+        let shuffleIds = this.shuffle(currentPieceIds)
+
+        // DUYỆT VÒNG LẶP ĐỂ THÊM LẠI VÀO VỊ TRÍ TRÊN MA TRẬN
+        for (let i = 0; i < currentPiecePositions.length; i++) {
+            // LẤY VỊ TRÍ TẠI I CỦA POSITION
+            let position = currentPiecePositions[i];
+            // LẤY ID MỚI TỪ MẢNG ĐÃ ĐƯỢC SHUFFLE
+            let id = shuffleIds[i];
+            // THÊM NÓ VÀO MA TRẬN
+            this.board.getMatrix()[position.x][position.y] = new Piece(id, position.x, position.y)
+        }
+
+        // XÓA ĐI BẢNG HIỆN TẠI
+        const board = $('#pokemon-board');
+        board.find('.row-list-pieces').remove();
+        // TẢI LẠI GIAO DIỆN VỚI MA TRẬN MỚI
+        this.renderBoard();
+    }
+
     spawnPokemon(types) {
         if (types === -1) {
             types = POKEMON_TYPES;
@@ -70,6 +122,7 @@ export default class GameManager {
             pokemonPool.push(i, i, i, i);
         }
         this.shuffle(pokemonPool);
+        // console.log(pokemonPool)
         this.board.fillBoard(pokemonPool);
         this.renderBoard();
     }
@@ -187,6 +240,10 @@ export default class GameManager {
             }, 200)
             this.loadLevel(null, this.currentLevelIndex)
             return;
+        } else {
+            if (this.board.isStillHaveConnection() === null) {
+                this.shuffleRemaining();
+            }
         }
     }
 }
