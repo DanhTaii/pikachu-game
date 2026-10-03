@@ -7,6 +7,7 @@ export default class Board {
         this.rows = rows;
         this.cols = cols;
         this.matrix = this.createEmptyBoard();
+        this.remainingPiece = 0;
     }
 
     createEmptyBoard() {
@@ -50,6 +51,7 @@ export default class Board {
         }
 
         this.matrix[row][col] = piece;
+        this.remainingPiece++;
 
         return true;
     }
@@ -66,7 +68,12 @@ export default class Board {
         if (piece === null) {
             return;
         }
+        this.remainingPiece--;
         this.getMatrix()[piece.getX()][piece.getY()] = null;
+    }
+
+    isBoardEmpty() {
+        return this.remainingPiece === 0;
     }
 
     isCellEmpty(row, col) {

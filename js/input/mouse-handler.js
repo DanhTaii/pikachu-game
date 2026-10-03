@@ -1,5 +1,6 @@
 import Piece from "../models/piece.js";
 import PathDrawer from "../path/path-drawer.js";
+import GameManager from "../game/game-manager.js";
 
 export default class MouseHandler {
     constructor(board, soundHandler) {
@@ -79,7 +80,9 @@ export default class MouseHandler {
         pieceUI2.css('visibility', 'hidden');
         this.resetFirestPieceSelection();
         this.board.removePiece(pieceMatrix1);
-        this.board.removePiece(pieceMatrix2)
+        this.board.removePiece(pieceMatrix2);
+        console.log(this.board.remainingPiece)
+        GameManager.getInstance().onMatchSuccess();
     }
 
     handleError(pieceMatrix1, pieceMatrix2, pieceUI1, pieceUI2) {
