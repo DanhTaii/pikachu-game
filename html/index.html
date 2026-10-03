@@ -12,18 +12,18 @@
 <body>
 
 <div class="game-container container">
-<!--    <header class="game-header">-->
-<!--        <section class="game-logo fw-bold text-lg-center">-->
-<!--            <img class="game-icon" src="../assets/img/pikachu.png" alt="Pikachu">-->
-<!--            <h4 class="fw-bold mt-2 text-light ms-2">PikaMatch Arcade</h4>-->
-<!--        </section>-->
+    <!--    <header class="game-header">-->
+    <!--        <section class="game-logo fw-bold text-lg-center">-->
+    <!--            <img class="game-icon" src="../assets/img/pikachu.png" alt="Pikachu">-->
+    <!--            <h4 class="fw-bold mt-2 text-light ms-2">PikaMatch Arcade</h4>-->
+    <!--        </section>-->
 
-<!--        <section class="game-utility">-->
-<!--            <button class="utility-items">-->
-<!--                <i class="fa-solid fa-volume"></i>-->
-<!--            </button>-->
-<!--        </section>-->
-<!--    </header>-->
+    <!--        <section class="game-utility">-->
+    <!--            <button class="utility-items">-->
+    <!--                <i class="fa-solid fa-volume"></i>-->
+    <!--            </button>-->
+    <!--        </section>-->
+    <!--    </header>-->
 
     <main class="game-main">
         <section class="game-intro game-box">
@@ -52,10 +52,12 @@
                 <div class="game-timer game-box">
                     <div class="game-timer__text mb-2">
                         <i class="fa-regular fa-alarm-clock"></i>
-                        <span class="game-timer__text-value fw-bold text-light">2:20</span>
+                        <span class="game-timer__text-value fw-bold text-light"></span>
                     </div>
-                    <div class="game-timer__value">
-                        <div class="game-timer__current-value"></div>
+                    <div class="progress game-timer__value">
+                        <!-- SỬ DỤNG PROGRESS CỦA BOOTSTRAP -->
+                        <div id="time-progress-bar" class="progress-bar game-timer__current-value" role="progressbar"
+                             style="width: 100%;"></div>
                     </div>
                 </div>
             </div>
@@ -75,59 +77,59 @@
 
                     <div class="level-body mt-2">
                         <ul class="level-list mt-4">
-<!--                            <li class="level-list__item" data-level="1">-->
-<!--                                <button type="button" class="game-btn active">-->
-<!--                                    <i class="fa-solid fa-circle-play "></i>-->
-<!--                                    <span class="fw-bold text-light">-->
-<!--                                        Màn 1-->
-<!--                                    </span>-->
-<!--                                </button>-->
-<!--                            </li>-->
+                            <!--                            <li class="level-list__item" data-level="1">-->
+                            <!--                                <button type="button" class="game-btn active">-->
+                            <!--                                    <i class="fa-solid fa-circle-play "></i>-->
+                            <!--                                    <span class="fw-bold text-light">-->
+                            <!--                                        Màn 1-->
+                            <!--                                    </span>-->
+                            <!--                                </button>-->
+                            <!--                            </li>-->
 
-<!--                            <li class="level-list__item" data-level="2">-->
-<!--                                <button type="button" class="game-btn">-->
-<!--                                    <i class="fa-solid fa-circle-play"></i>-->
-<!--                                    <span class="fw-bold text-light">-->
-<!--                                        Màn 2-->
-<!--                                    </span>-->
-<!--                                </button>-->
-<!--                            </li>-->
+                            <!--                            <li class="level-list__item" data-level="2">-->
+                            <!--                                <button type="button" class="game-btn">-->
+                            <!--                                    <i class="fa-solid fa-circle-play"></i>-->
+                            <!--                                    <span class="fw-bold text-light">-->
+                            <!--                                        Màn 2-->
+                            <!--                                    </span>-->
+                            <!--                                </button>-->
+                            <!--                            </li>-->
 
-<!--                            <li class="level-list__item" data-level="3">-->
-<!--                                <button type="button" class="game-btn">-->
-<!--                                    <i class="fa-solid fa-circle-play"></i>-->
-<!--                                    <span class="fw-bold text-light">-->
-<!--                                        Màn 3-->
-<!--                                    </span>-->
-<!--                                </button>-->
-<!--                            </li>-->
+                            <!--                            <li class="level-list__item" data-level="3">-->
+                            <!--                                <button type="button" class="game-btn">-->
+                            <!--                                    <i class="fa-solid fa-circle-play"></i>-->
+                            <!--                                    <span class="fw-bold text-light">-->
+                            <!--                                        Màn 3-->
+                            <!--                                    </span>-->
+                            <!--                                </button>-->
+                            <!--                            </li>-->
 
-<!--                            <li class="level-list__item" data-level="4">-->
-<!--                                <button type="button" class="game-btn">-->
-<!--                                    <i class="fa-solid fa-circle-play"></i>-->
-<!--                                    <span class="fw-bold text-light">-->
-<!--                                            Màn 4-->
-<!--                                        </span>-->
-<!--                                </button>-->
-<!--                            </li>-->
+                            <!--                            <li class="level-list__item" data-level="4">-->
+                            <!--                                <button type="button" class="game-btn">-->
+                            <!--                                    <i class="fa-solid fa-circle-play"></i>-->
+                            <!--                                    <span class="fw-bold text-light">-->
+                            <!--                                            Màn 4-->
+                            <!--                                        </span>-->
+                            <!--                                </button>-->
+                            <!--                            </li>-->
 
-<!--                            <li class="level-list__item" data-level="5">-->
-<!--                                <button type="button" class="game-btn">-->
-<!--                                    <i class="fa-solid fa-circle-play"></i>-->
-<!--                                    <span class="fw-bold text-light">-->
-<!--                                        Màn 5-->
-<!--                                    </span>-->
-<!--                                </button>-->
-<!--                            </li>-->
+                            <!--                            <li class="level-list__item" data-level="5">-->
+                            <!--                                <button type="button" class="game-btn">-->
+                            <!--                                    <i class="fa-solid fa-circle-play"></i>-->
+                            <!--                                    <span class="fw-bold text-light">-->
+                            <!--                                        Màn 5-->
+                            <!--                                    </span>-->
+                            <!--                                </button>-->
+                            <!--                            </li>-->
 
-<!--                            <li class="level-list__item" data-level="6">-->
-<!--                                <button type="button" class="game-btn">-->
-<!--                                    <i class="fa-solid fa-circle-play"></i>-->
-<!--                                    <span class="fw-bold text-light">-->rp
-<!--                                        Màn 6-->
-<!--                                    </span>-->
-<!--                                </button>-->
-<!--                            </li>-->
+                            <!--                            <li class="level-list__item" data-level="6">-->
+                            <!--                                <button type="button" class="game-btn">-->
+                            <!--                                    <i class="fa-solid fa-circle-play"></i>-->
+                            <!--                                    <span class="fw-bold text-light">-->rp
+                            <!--                                        Màn 6-->
+                            <!--                                    </span>-->
+                            <!--                                </button>-->
+                            <!--                            </li>-->
                         </ul>
                     </div>
                 </div>
@@ -158,6 +160,7 @@
             </button>
             <button type="button" class="game-btn pause-btn col-2 me-1">
                 <i class="fa-regular fa-circle-pause"></i>
+                <!--                <i class="fa-solid fa-circle-play"></i>-->
                 <span class="fw-bold text-light">
                     Tạm dừng
                 </span>
@@ -177,11 +180,11 @@
         </section>
     </main>
 
-<!--    <footer class="game-footer">-->
-<!--        <div class="game-footer-content row g-0">-->
-<!--            <span>© Copyright 2010 - 2026 PikaMatch.net</span>-->
-<!--        </div>-->
-<!--    </footer>-->
+    <!--    <footer class="game-footer">-->
+    <!--        <div class="game-footer-content row g-0">-->
+    <!--            <span>© Copyright 2010 - 2026 PikaMatch.net</span>-->
+    <!--        </div>-->
+    <!--    </footer>-->
 
 </div>
 

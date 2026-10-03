@@ -19,6 +19,7 @@ export default class MouseHandler {
         this.handleLevelSwap();
         this.handleShuffleButton();
         this.handleHintButton();
+        this.handlePauseButton();
     }
 
     resetFirestPieceSelection() {
@@ -108,6 +109,8 @@ export default class MouseHandler {
             const levelIndex = newLevelItem.data('level');
             // console.log(newLevelItem);
             // console.log("LEVEL INDEX TRONG handleLevelSwap: ", levelIndex);
+            $('.level-list button').removeClass('active');
+            newLevelItem.find('button').addClass('active');
             GameManager.getInstance().loadLevel(null, levelIndex - 1);
         })
     }
@@ -139,6 +142,20 @@ export default class MouseHandler {
                 divPieceOne.removeClass('highlight');
                 divPieceTwo.removeClass('highlight');
             }, 600)
+        })
+    }
+
+    handlePauseButton() {
+        const pauseButton = $('.pause-btn');
+        pauseButton.on('click', () => {
+            GameManager.getInstance().pauseTimer();
+
+            let icon = pauseButton.find('i');
+            if (icon.hasClass('fa-circle-pause')) {
+                icon.removeClass('fa-circle-pause').addClass('fa-circle-play');
+            } else {
+                icon.removeClass('fa-circle-play').addClass('fa-circle-pause');
+            }
         })
     }
 

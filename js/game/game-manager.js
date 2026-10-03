@@ -22,6 +22,9 @@ export default class GameManager {
         this.gameState = 'INIT';
         this.soundHandler = new SoundHandler();
         this.currentLevelIndex = 0;
+        this.remainingTime = 0;
+        this.totalTime = 0;
+        this.timerInterval = 0;
     }
 
     init(matrix) {
@@ -45,6 +48,8 @@ export default class GameManager {
             let levelConfig = LEVEL_CONFIGS[this.currentLevelIndex];
             // console.log(levelConfig);
             // console.log(this.currentLevelIndex);
+            this.totalTime = levelConfig.time;
+            this.startTimer(levelConfig.time);
 
             this.board = new Board(levelConfig.rows, levelConfig.cols);
             this.mouseHandler = new MouseHandler(this.board, this.soundHandler);
@@ -249,5 +254,61 @@ export default class GameManager {
 
     suggestTwoPiece() {
         return this.board.isStillHaveConnection();
+    }
+
+    // ================ PHẦN XỬ LÝ THỜI GIAN ================
+    formatTime(seconds) {
+        let m = Math.floor(seconds / 60);
+        let s = seconds % 60;
+
+        return `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s} `;
+    }
+
+    startTimer(seconds) {
+        // HỦY BỘ ĐẾM THỜI GIAN
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+        }
+
+        // GÁN SỐ THỜI GIAN, VÀ TRUYỀN DỮ LIỆU LÊN UI
+        this.remainingTime = seconds;
+        $('.game-timer__text-value').text(this.formatTime(seconds));
+
+        // BỘ ĐẾM THỜI GIAN BẮT ĐẦU CHẠY
+        this.timerInterval = setInterval(() => {
+            // TRWF THỜI GIAN VÀ CẬP NHẬT LẠI THỜI GIAN TEXT
+            this.remainingTime--;
+            $('.game-timer__text-value').text(this.formatTime(this.remainingTime));
+
+            // TÍNH ĐỘ DÀI CỦA THÀNH THỜI GIAN (THANH XANH)
+            let percent = (this.remainingTime / this.totalTime) * 100;
+            $('#time-progress-bar').css('width', `${percent}%`);
+
+            // NẾU HEEST THOWIF GIAN THÌ RESET LẠI
+            if (this.remainingTime <= 0) {
+                clearInterval(this.timerInterval);
+                this.board = null;
+                setTimeout(() => {
+                    alert("HẾT GIỜ! BẠN ĐÃ THUA CUỘC!");
+                    this.loadLevel(null, 0)
+                }, 300);
+            }
+        }, 1000)
+    }
+
+    stopTimer() {
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
+        }
+    }
+
+    pauseTimer() {
+        // BỘ ĐẾM KHNG CHẠY VÀ THỜI GIAN VẪN CÒN
+        if (!this.timerInterval && this.remainingTime > 0) {
+            this.startTimer(this.remainingTime);
+        } else {
+            this.stopTimer();
+        }
     }
 }
