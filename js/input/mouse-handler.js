@@ -67,6 +67,8 @@ export default class MouseHandler {
             }
 
         });
+
+        this.handleLevelSwap()
     }
 
     resetFirestPieceSelection() {
@@ -92,6 +94,17 @@ export default class MouseHandler {
 
         this.firstSelectedPieceUI = pieceUI2;
         this.firstSelectedPieceMatrix = pieceMatrix2;
+    }
+
+    handleLevelSwap() {
+        const list = $('.level-list');
+        list.on('click', '.level-list__item', (event) => {
+            const newLevelItem = $(event.currentTarget);
+            const levelIndex = newLevelItem.data('level');
+            // console.log(newLevelItem);
+            // console.log("LEVEL INDEX TRONG handleLevelSwap: ", levelIndex);
+            GameManager.getInstance().loadLevel(null, levelIndex - 1)
+        })
     }
 
 }

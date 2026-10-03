@@ -21,6 +21,7 @@ const TEST_MATRIX = [
 $(document).ready(function () {
     const game = GameManager.getInstance();
 
-    game.loadLevel(TEST_MATRIX);
+    // game.loadLevel(TEST_MATRIX);
+    game.loadLevel(null, 0);
     // game.init(null);
 });

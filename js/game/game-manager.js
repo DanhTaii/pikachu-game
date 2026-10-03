@@ -25,6 +25,10 @@ export default class GameManager {
     }
 
     loadLevel(matrix, levelIndex) {
+        const board = $('#pokemon-board');
+        board.find('.pokemon-piece').remove();
+        this.renderListLevel();
+
         if (matrix !== null) {
             this.board = new Board(BOARD_ROWS, BOARD_COLS);
             this.mouseHandler = new MouseHandler(this.board, this.soundHandler);
@@ -32,6 +36,7 @@ export default class GameManager {
             this.spawnTestMap(matrix)
             this.renderBoard()
         } else {
+            // console.log('LEVEL INDEX TRONG loadLevel: ', levelIndex);
             this.currentLevelIndex = levelIndex;
             let levelConfig = LEVEL_CONFIGS[this.currentLevelIndex];
             // console.log(levelConfig);
@@ -39,7 +44,7 @@ export default class GameManager {
 
             this.board = new Board(levelConfig.rows, levelConfig.cols);
             this.mouseHandler = new MouseHandler(this.board, this.soundHandler);
-
+            $('.current-level__value').text(this.currentLevelIndex + 1);
             this.spawnPokemon(levelConfig.types);
         }
 
@@ -135,6 +140,31 @@ export default class GameManager {
         );
     }
 
+    renderListLevel() {
+        const container = $('.level-list');
+        container.find('.level-list__item').remove();
+
+        let listLevelConfig = LEVEL_CONFIGS.length;
+
+        for (let i = 0; i < listLevelConfig; i++) {
+            const item = $('<li>');
+            item.addClass('level-list__item'); // Bạn quên add class này cho thẻ li
+            item.attr('data-level', i + 1);
+
+            const button = $('<button>');
+            button.addClass('game-btn');
+            if (i === this.currentLevelIndex) {
+                button.addClass('active');
+            }
+
+            button.append($('<i class="fa-solid fa-circle-play"></i>'));
+            button.append($(`<span class="fw-bold text-light">Màn ${i + 1}</span>`))
+
+            item.append(button)
+            container.append(item)
+        }
+    }
+
     onMatchSuccess() {
         if (this.board.isBoardEmpty()) {
             let string = ''
@@ -145,7 +175,7 @@ export default class GameManager {
             // KIẾM VÀ XÓA CÁC DIV CÓ CLASS LÀ pokemon-piece,
             // DO CÒN THẺ DIV CONNECTION-LAYER
             board.find('.pokemon-piece').remove();
-            if (this.currentLevelIndex < LEVEL_CONFIGS.length){
+            if (this.currentLevelIndex < LEVEL_CONFIGS.length) {
                 string = 'CHUSC MỪNG ! BẠN ĐÃ VƯỢT MÀN !'
             } else {
                 string = 'TUYEEJT VỜI ! BẠN ĐÃ PHÁ ĐẢO GAME !'
