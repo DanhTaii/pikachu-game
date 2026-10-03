@@ -262,7 +262,7 @@ main section {
 /* BOARD */
 
 .board-content {
-    padding: 64px 134px !important;
+    padding: 10px 100px !important;
     width: 942px !important;
     height: 600px !important;
 }
