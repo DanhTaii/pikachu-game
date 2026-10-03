@@ -85,7 +85,7 @@ export default class Board {
     }
 
     printMatrix() {
-        console.log("CHẠY THUẬT TOÁN IN");
+        // console.log("CHẠY THUẬT TOÁN IN");
 
         const displayMatrix = this.matrix.map(row =>
             row.map(cell => {

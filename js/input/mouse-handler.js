@@ -54,9 +54,9 @@ export default class MouseHandler {
                     this.handleMatch(piece1, piece2, this.firstSelectedPieceUI, currentPieceUI);
                     // XỬ LÝ CHỌN SAI
                 } else if ((corners = this.board.canConnectTwoCorner(piece1, piece2)) !== null) {
-                    console.log('BẮT ĐẦU VẼ 2 GÓC')
-                    console.log(corners.positionCornerOne);
-                    console.log(corners.positionCornerTwo);
+                    // console.log('BẮT ĐẦU VẼ 2 GÓC')
+                    // console.log(corners.positionCornerOne);
+                    // console.log(corners.positionCornerTwo);
                     this.pathDrawer.drawTwoCornerConnection(
                         this.firstSelectedPieceUI, currentPieceUI, corners.positionCornerOne, corners.positionCornerTwo
                     );
@@ -81,7 +81,7 @@ export default class MouseHandler {
         this.resetFirestPieceSelection();
         this.board.removePiece(pieceMatrix1);
         this.board.removePiece(pieceMatrix2);
-        console.log(this.board.remainingPiece)
+        // console.log(this.board.remainingPiece);
         GameManager.getInstance().onMatchSuccess();
     }
 

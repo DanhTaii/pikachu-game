@@ -3,6 +3,7 @@ import {BOARD_COLS, BOARD_ROWS, PIECE_SIZE, POKEMON_TYPES} from "../utils/consta
 import SoundHandler from "../audio/sound-handler.js";
 import MouseHandler from "../input/mouse-handler.js";
 import Piece from "../models/piece.js";
+import {LEVEL_CONFIGS} from "../utils/level-config.js";
 
 export default class GameManager {
     static instance = null;
@@ -19,18 +20,29 @@ export default class GameManager {
             return;
         }
         this.gameState = 'INIT';
-        this.board = new Board(BOARD_ROWS, BOARD_COLS);
         this.soundHandler = new SoundHandler();
-        this.mouseHandler = new MouseHandler(this.board, this.soundHandler);
+        this.currentLevelIndex = 0;
     }
 
-    init(matrix) {
+    loadLevel(matrix, levelIndex) {
         if (matrix !== null) {
+            this.board = new Board(BOARD_ROWS, BOARD_COLS);
+            this.mouseHandler = new MouseHandler(this.board, this.soundHandler);
+
             this.spawnTestMap(matrix)
             this.renderBoard()
         } else {
-            this.spawnPokemon();
+            this.currentLevelIndex = levelIndex;
+            let levelConfig = LEVEL_CONFIGS[this.currentLevelIndex];
+            // console.log(levelConfig);
+            // console.log(this.currentLevelIndex);
+
+            this.board = new Board(levelConfig.rows, levelConfig.cols);
+            this.mouseHandler = new MouseHandler(this.board, this.soundHandler);
+
+            this.spawnPokemon(levelConfig.types);
         }
+
     }
 
     shuffle(array) {
@@ -42,10 +54,13 @@ export default class GameManager {
         return array;
     }
 
-    spawnPokemon() {
+    spawnPokemon(types) {
+        if (types === -1) {
+            types = POKEMON_TYPES;
+        }
         let pokemonPool = [];
 
-        for (let i = 0; i < POKEMON_TYPES; i++) {
+        for (let i = 0; i < types; i++) {
             // THÊM 2 CẶP VAO
             pokemonPool.push(i, i, i, i);
         }
@@ -122,9 +137,25 @@ export default class GameManager {
 
     onMatchSuccess() {
         if (this.board.isBoardEmpty()) {
+            let string = ''
+            this.currentLevelIndex++;
+            // console.log(this.currentLevelIndex)
+            // TÌM ĐẾN BẢNG CHƯA CÁC DIV PIECE
+            const board = $('#pokemon-board');
+            // KIẾM VÀ XÓA CÁC DIV CÓ CLASS LÀ pokemon-piece,
+            // DO CÒN THẺ DIV CONNECTION-LAYER
+            board.find('.pokemon-piece').remove();
+            if (this.currentLevelIndex < LEVEL_CONFIGS.length){
+                string = 'CHUSC MỪNG ! BẠN ĐÃ VƯỢT MÀN !'
+            } else {
+                string = 'TUYEEJT VỜI ! BẠN ĐÃ PHÁ ĐẢO GAME !'
+                this.currentLevelIndex = 0;
+            }
+
             setTimeout(() => {
-                alert("CHÚC MỪNG ! BẠN ĐÃ VƯỢT MÀN !")
+                alert(string)
             }, 200)
+            this.loadLevel(null, this.currentLevelIndex)
             return;
         }
     }
