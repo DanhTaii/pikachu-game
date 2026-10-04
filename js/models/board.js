@@ -10,6 +10,11 @@ export default class Board {
         this.remainingPiece = 0;
     }
 
+    setRowAndCol(rows, cols) {
+        this.rows = rows;
+        this.cols = cols;
+    }
+
     createEmptyBoard() {
         // NHƯ 1 VÒNG LẶP, TẠO RA MẢNG HÀNG RỒI TẠO TIẾP CỘT CHO HÀNG ĐÓ
         // CHO TỚI KHI NÀO ĐỦ GIÁ TRỊ HÀNG THÌ DỪNG

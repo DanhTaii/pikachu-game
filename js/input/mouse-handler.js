@@ -22,6 +22,10 @@ export default class MouseHandler {
         this.handlePauseButton();
     }
 
+    setBoard(board) {
+        this.board = board;
+    }
+
     resetFirestPieceSelection() {
         this.firstSelectedPieceUI = null;
         this.firstSelectedPieceMatrix = null;
@@ -124,7 +128,7 @@ export default class MouseHandler {
     handleHintButton() {
         $('.suggest-btn').on('click', () => {
 
-            const result = GameManager.getInstance().suggestTwoPiece();
+            const result = this.board.isStillHaveConnection();
             // console.log(result);
             if (result === null) {
                 return;

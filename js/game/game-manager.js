@@ -21,14 +21,18 @@ export default class GameManager {
         }
         this.gameState = 'INIT';
         this.soundHandler = new SoundHandler();
+        this.mouseHandler = null;
         this.currentLevelIndex = 0;
         this.remainingTime = 0;
         this.totalTime = 0;
         this.timerInterval = 0;
+        this.currentScore = 0;
+        this.highestScore = parseInt(localStorage.getItem('pikachu-highest-score')) || 0;
     }
 
     init(matrix) {
         this.loadLevel(matrix, 0);
+        $('#highest-score-value').text(this.highestScore);
         this.renderListLevel();
     }
 
@@ -37,8 +41,8 @@ export default class GameManager {
         board.find('.row-list-pieces').remove();
 
         if (matrix !== null) {
-            this.board = new Board(BOARD_ROWS, BOARD_COLS);
-            this.mouseHandler = new MouseHandler(this.board, this.soundHandler);
+            // this.board = new Board(BOARD_ROWS, BOARD_COLS);
+            // this.mouseHandler = new MouseHandler(this.board, this.soundHandler);
 
             this.spawnTestMap(matrix)
             this.renderBoard()
@@ -48,11 +52,22 @@ export default class GameManager {
             let levelConfig = LEVEL_CONFIGS[this.currentLevelIndex];
             // console.log(levelConfig);
             // console.log(this.currentLevelIndex);
+            if (this.currentLevelIndex === 0) {
+                this.updateCurrentScore(0);
+                this.highestScore = 0;
+                localStorage.setItem("pikachu-highest-score", this.highestScore);
+            }
             this.totalTime = levelConfig.time;
             this.startTimer(levelConfig.time);
 
             this.board = new Board(levelConfig.rows, levelConfig.cols);
-            this.mouseHandler = new MouseHandler(this.board, this.soundHandler);
+            // KIỂM TRA XEM NẾU NÓ NULL THÌ MỚI TẠO MỚI,
+            // CÒN KHÔNG THÌ CHỈ ĐỔI BOARD DO ĐỀU CÓ CÙNG 1 CƠ CHẾ BẤM CHUỘT
+            if (this.mouseHandler === null) {
+                this.mouseHandler = new MouseHandler(this.board, this.soundHandler);
+            } else {
+                this.mouseHandler.setBoard(this.board)
+            }
             $('.current-level__value').text(this.currentLevelIndex + 1);
             this.spawnPokemon(levelConfig.types);
         }
@@ -224,6 +239,8 @@ export default class GameManager {
     }
 
     onMatchSuccess() {
+        this.currentScore += 10;
+        this.updateCurrentScore(this.currentScore);
         if (this.board.isBoardEmpty()) {
             let string = ''
             this.currentLevelIndex++;
@@ -252,8 +269,18 @@ export default class GameManager {
         }
     }
 
-    suggestTwoPiece() {
-        return this.board.isStillHaveConnection();
+    updateCurrentScore(score) {
+        if (score > this.highestScore) {
+            this.currentScore = score;
+            this.highestScore = score;
+            localStorage.setItem("pikachu-highest-score", this.highestScore);
+            $('#current-score').text(this.currentScore);
+            // console.log(this.currentScore);
+            $('#highest-score').text(this.currentScore);
+        } else  {
+            this.currentScore = score;
+            $('#current-score').text(this.currentScore);
+        }
     }
 
     // ================ PHẦN XỬ LÝ THỜI GIAN ================
