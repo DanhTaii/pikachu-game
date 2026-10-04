@@ -1,5 +1,6 @@
 import Piece from "../models/piece.js";
 import PathDrawer from "../path/path-drawer.js";
+import GameManager from "../game/game-manager.js";
 
 export default class MouseHandler {
     constructor(board, soundHandler) {
@@ -14,6 +15,23 @@ export default class MouseHandler {
     }
 
     init() {
+        this.handlePieceSelection();
+        this.handleLevelSwap();
+        this.handleShuffleButton();
+        this.handleHintButton();
+        this.handlePauseButton();
+    }
+
+    setBoard(board) {
+        this.board = board;
+    }
+
+    resetFirestPieceSelection() {
+        this.firstSelectedPieceUI = null;
+        this.firstSelectedPieceMatrix = null;
+    }
+
+    handlePieceSelection() {
         $('#pokemon-board').on('click', '.pokemon-piece', (event) => {
             const currentPieceUI = $(event.currentTarget);
             const currentPieceMatrix = new Piece(
@@ -53,9 +71,9 @@ export default class MouseHandler {
                     this.handleMatch(piece1, piece2, this.firstSelectedPieceUI, currentPieceUI);
                     // XỬ LÝ CHỌN SAI
                 } else if ((corners = this.board.canConnectTwoCorner(piece1, piece2)) !== null) {
-                    console.log('BẮT ĐẦU VẼ 2 GÓC')
-                    console.log(corners.positionCornerOne);
-                    console.log(corners.positionCornerTwo);
+                    // console.log('BẮT ĐẦU VẼ 2 GÓC')
+                    // console.log(corners.positionCornerOne);
+                    // console.log(corners.positionCornerTwo);
                     this.pathDrawer.drawTwoCornerConnection(
                         this.firstSelectedPieceUI, currentPieceUI, corners.positionCornerOne, corners.positionCornerTwo
                     );
@@ -68,18 +86,15 @@ export default class MouseHandler {
         });
     }
 
-    resetFirestPieceSelection() {
-        this.firstSelectedPieceUI = null;
-        this.firstSelectedPieceMatrix = null;
-    }
-
     handleMatch(pieceMatrix1, pieceMatrix2, pieceUI1, pieceUI2) {
         this.soundHandler.playMatch();
         pieceUI1.css('visibility', 'hidden');
         pieceUI2.css('visibility', 'hidden');
         this.resetFirestPieceSelection();
         this.board.removePiece(pieceMatrix1);
-        this.board.removePiece(pieceMatrix2)
+        this.board.removePiece(pieceMatrix2);
+        // console.log(this.board.remainingPiece);
+        GameManager.getInstance().onMatchSuccess();
     }
 
     handleError(pieceMatrix1, pieceMatrix2, pieceUI1, pieceUI2) {
@@ -89,6 +104,63 @@ export default class MouseHandler {
 
         this.firstSelectedPieceUI = pieceUI2;
         this.firstSelectedPieceMatrix = pieceMatrix2;
+    }
+
+    handleLevelSwap() {
+        const list = $('.level-list');
+        list.on('click', '.level-list__item', (event) => {
+            const newLevelItem = $(event.currentTarget);
+            const levelIndex = newLevelItem.data('level');
+            // console.log(newLevelItem);
+            // console.log("LEVEL INDEX TRONG handleLevelSwap: ", levelIndex);
+            $('.level-list button').removeClass('active');
+            newLevelItem.find('button').addClass('active');
+            GameManager.getInstance().loadLevel(null, levelIndex - 1);
+        })
+    }
+
+    handleShuffleButton() {
+        $('.shuffle-btn').on('click', (event) => {
+            GameManager.getInstance().shuffleRemaining();
+        })
+    }
+
+    handleHintButton() {
+        $('.suggest-btn').on('click', () => {
+
+            const result = this.board.isStillHaveConnection();
+            // console.log(result);
+            if (result === null) {
+                return;
+            }
+
+            // console.log(result);
+            const {pieceOne, pieceTwo} = result;
+            let divPieceOne = $(`#pokemon-board .pokemon-piece[data-row="${pieceOne.getX()}"][data-col="${pieceOne.getY()}"]`);
+            let divPieceTwo = $(`#pokemon-board .pokemon-piece[data-row="${pieceTwo.getX()}"][data-col="${pieceTwo.getY()}"]`);
+
+            divPieceOne.addClass('highlight');
+            divPieceTwo.addClass('highlight');
+
+            setTimeout(() => {
+                divPieceOne.removeClass('highlight');
+                divPieceTwo.removeClass('highlight');
+            }, 600)
+        })
+    }
+
+    handlePauseButton() {
+        const pauseButton = $('.pause-btn');
+        pauseButton.on('click', () => {
+            GameManager.getInstance().pauseTimer();
+
+            let icon = pauseButton.find('i');
+            if (icon.hasClass('fa-circle-pause')) {
+                icon.removeClass('fa-circle-pause').addClass('fa-circle-play');
+            } else {
+                icon.removeClass('fa-circle-play').addClass('fa-circle-pause');
+            }
+        })
     }
 
 }

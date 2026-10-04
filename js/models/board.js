@@ -7,6 +7,12 @@ export default class Board {
         this.rows = rows;
         this.cols = cols;
         this.matrix = this.createEmptyBoard();
+        this.remainingPiece = 0;
+    }
+
+    setRowAndCol(rows, cols) {
+        this.rows = rows;
+        this.cols = cols;
     }
 
     createEmptyBoard() {
@@ -20,7 +26,7 @@ export default class Board {
         )
     }
 
-    fillBoard(piecePool) {
+    fillBoard(piecePool, positions) {
         let indexPool = 0;
         for (let i = 1; i < this.rows - 1; i++) {
             for (let j = 1; j < this.cols - 1; j++) {
@@ -50,6 +56,7 @@ export default class Board {
         }
 
         this.matrix[row][col] = piece;
+        this.remainingPiece++;
 
         return true;
     }
@@ -66,7 +73,12 @@ export default class Board {
         if (piece === null) {
             return;
         }
+        this.remainingPiece--;
         this.getMatrix()[piece.getX()][piece.getY()] = null;
+    }
+
+    isBoardEmpty() {
+        return this.remainingPiece === 0;
     }
 
     isCellEmpty(row, col) {
@@ -78,7 +90,7 @@ export default class Board {
     }
 
     printMatrix() {
-        console.log("CHẠY THUẬT TOÁN IN");
+        // console.log("CHẠY THUẬT TOÁN IN");
 
         const displayMatrix = this.matrix.map(row =>
             row.map(cell => {
@@ -248,6 +260,52 @@ export default class Board {
                     if (result !== null) {
                         return result;
                     }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    isStillHaveConnection() {
+        let groups = {}
+
+        // NHÓM CÁC PIECE CÓ CÙNG ID LẠI THÀNH 1 MẢNG
+        for (let i = 0; i < this.rows; i++) {
+            for (let j = 0; j < this.cols; j++) {
+                let piece = this.matrix[i][j];
+                //NẾU PIECE KHÁC NULL
+                if (piece !== null) {
+                    let id = piece.getId();
+                    // NẾU CHƯA CÓ MẢNG CHO ID HIỆN TỊA
+                    if (!groups[id]) {
+                        // TẠO MẢNG MỚI
+                        groups[id] = [];
+                    }
+                    // THÊM NÓ VÀO MẢNG VỊ TRÍ ID
+                    groups[id].push(piece);
+                }
+            }
+        }
+
+        for (let index in groups) {
+            let pieceList = groups[index];
+            for (let i = 0; i < pieceList.length - 1; i++) {
+                for (let j = i + 1; j < pieceList.length; j++) {
+                    let piece1 = pieceList[i];
+                    let piece2 = pieceList[j];
+
+                    if (
+                        this.canConnectStraight(piece1, piece2) === true ||
+                        this.canConnectOneCorner(piece1, piece2) !== null ||
+                        this.canConnectTwoCorner(piece1, piece2) !== null
+                    ) {
+                        return {
+                            pieceOne: piece1,
+                            pieceTwo: piece2
+                        }
+                    }
+
                 }
             }
         }

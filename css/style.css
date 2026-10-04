@@ -179,7 +179,6 @@ main section {
     width: 20%;
 
 }
-
 .game-timer {
     width: 40%;
     background-color: var(--box-color);
@@ -190,8 +189,6 @@ main section {
 }
 
 .game-timer__value {
-    position: relative;
-    width: 100%;
     height: 10px;
     background-color: var(--bg-color);
     box-shadow: inset 0 1px 3px var(--bg-shadow-color);
@@ -200,14 +197,7 @@ main section {
 }
 
 .game-timer__current-value {
-    position: absolute;
-    background-color: var(--timer-color);
-    width: 80%;
-    border-radius: 50px;
-    height: 6px;
-    top: 0;
-    left: 0;
-    z-index: 100;
+    background-color: var(--timer-color) !important;
 }
 
 .game-body {
@@ -298,6 +288,11 @@ main section {
 .pokemon-piece.selected {
     filter: brightness(40%);
     pointer-events: none;
+}
+
+.pokemon-piece.highlight {
+    box-shadow: 0 10px 20px var(--color-yellow);
+    border: 2px solid var(--color-yellow);
 }
 
 #pokemon-board {
