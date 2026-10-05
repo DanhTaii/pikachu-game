@@ -6,52 +6,6 @@ export default class PathFinder {
         this.board = board;
     }
 
-    isStillHaveConnection() {
-        let groups = {}
-
-        // NHÓM CÁC PIECE CÓ CÙNG ID LẠI THÀNH 1 MẢNG
-        for (let i = 0; i < this.board.rows; i++) {
-            for (let j = 0; j < this.board.cols; j++) {
-                let piece = this.board.getPiece(i, j);
-                //NẾU PIECE KHÁC NULL
-                if (piece !== null) {
-                    let id = piece.getId();
-                    // NẾU CHƯA CÓ MẢNG CHO ID HIỆN TỊA
-                    if (!groups[id]) {
-                        // TẠO MẢNG MỚI
-                        groups[id] = [];
-                    }
-                    // THÊM NÓ VÀO MẢNG VỊ TRÍ ID
-                    groups[id].push(piece);
-                }
-            }
-        }
-
-        for (let index in groups) {
-            let pieceList = groups[index];
-            for (let i = 0; i < pieceList.length - 1; i++) {
-                for (let j = i + 1; j < pieceList.length; j++) {
-                    let piece1 = pieceList[i];
-                    let piece2 = pieceList[j];
-
-                    if (
-                        this.canConnectStraight(piece1, piece2) === true ||
-                        this.canConnectOneCorner(piece1, piece2) !== null ||
-                        this.canConnectTwoCorner(piece1, piece2) !== null
-                    ) {
-                        return {
-                            pieceOne: piece1,
-                            pieceTwo: piece2
-                        }
-                    }
-
-                }
-            }
-        }
-
-        return null;
-    }
-
     isClearPath(position1, position2) {
         let pr1 = position1.getX();
         let pc1 = position1.getY();
@@ -84,6 +38,11 @@ export default class PathFinder {
     }
 
     canConnectStraight(piece1, piece2) {
+        // console.log("=== PIECE 1 TRONG PATH-FINDER",piece1);
+        // console.log("=== PIECE 2 TRONG PATH-FINDER",piece2);
+        //
+        // console.log("=== PIECE id 1 TRONG PATH-FINDER",piece1.getId());
+        // console.log("=== PIECE id 2 TRONG PATH-FINDER",piece2.getId());
         if (piece1.getId() !== piece2.getId()) {
             return false;
         }
@@ -209,6 +168,52 @@ export default class PathFinder {
                     if (result !== null) {
                         return result;
                     }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    isStillHaveConnection() {
+        let groups = {}
+
+        // NHÓM CÁC PIECE CÓ CÙNG ID LẠI THÀNH 1 MẢNG
+        for (let i = 0; i < this.board.getRows(); i++) {
+            for (let j = 0; j < this.board.getCols(); j++) {
+                let piece = this.board.getPiece(i, j);
+                //NẾU PIECE KHÁC NULL
+                if (piece !== null) {
+                    let id = piece.getId();
+                    // NẾU CHƯA CÓ MẢNG CHO ID HIỆN TỊA
+                    if (!groups[id]) {
+                        // TẠO MẢNG MỚI
+                        groups[id] = [];
+                    }
+                    // THÊM NÓ VÀO MẢNG VỊ TRÍ ID
+                    groups[id].push(piece);
+                }
+            }
+        }
+
+        for (let index in groups) {
+            let pieceList = groups[index];
+            for (let i = 0; i < pieceList.length - 1; i++) {
+                for (let j = i + 1; j < pieceList.length; j++) {
+                    let piece1 = pieceList[i];
+                    let piece2 = pieceList[j];
+
+                    if (
+                        this.canConnectStraight(piece1, piece2) === true ||
+                        this.canConnectOneCorner(piece1, piece2) !== null ||
+                        this.canConnectTwoCorner(piece1, piece2) !== null
+                    ) {
+                        return {
+                            pieceOne: piece1,
+                            pieceTwo: piece2
+                        }
+                    }
+
                 }
             }
         }

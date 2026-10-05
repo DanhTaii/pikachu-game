@@ -1,17 +1,26 @@
 import Piece from "./piece.js";
-import Position from "./position.js";
-import {BOARD_COLS, BOARD_ROWS} from "../utils/constants.js";
 
 export default class Board {
-    constructor(rows, cols, pathFinder) {
+    constructor(rows, cols) {
         this.rows = rows;
         this.cols = cols;
         this.matrix = this.createEmptyBoard();
         this.remainingPiece = 0;
     }
 
-    setRowAndCol(rows, cols) {
+    getRows() {
+        return this.rows;
+    }
+
+    getCols() {
+        return this.cols;
+    }
+
+    setRows(rows) {
         this.rows = rows;
+    }
+
+    setCols(cols) {
         this.cols = cols;
     }
 
@@ -89,17 +98,17 @@ export default class Board {
         return (row >= 0 && row < this.rows && col >= 0 && col < this.cols);
     }
 
-    // printMatrix() {
-    //     // console.log("CHẠY THUẬT TOÁN IN");
-    //
-    //     const displayMatrix = this.matrix.map(row =>
-    //         row.map(cell => {
-    //             if (cell === null) return null;
-    //
-    //             return cell.getId();
-    //         })
-    //     );
-    //
-    //     console.table(displayMatrix);
-    // }
+    printMatrix() {
+        // console.log("CHẠY THUẬT TOÁN IN");
+
+        const displayMatrix = this.matrix.map(row =>
+            row.map(cell => {
+                if (cell === null) return null;
+
+                return cell.getId();
+            })
+        );
+
+        console.table(displayMatrix);
+    }
 }

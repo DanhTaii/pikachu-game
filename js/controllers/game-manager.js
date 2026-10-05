@@ -1,10 +1,12 @@
 import Board from "../models/board.js";
 import {BOARD_COLS, BOARD_ROWS, PIECE_SIZE, POKEMON_TYPES} from "../utils/constants.js";
-import SoundHandler from "../audio/sound-handler.js";
-import MouseHandler from "../input/mouse-handler.js";
+import SoundHandler from "../services/sound-handler.js";
+import MouseHandler from "./mouse-handler.js";
 import Piece from "../models/piece.js";
 import {LEVEL_CONFIGS} from "../utils/level-config.js";
 import GameView from "../view/game-view.js";
+import PathFinder from "../models/path-finder.js";
+import PathDrawer from "../view/path-drawer.js";
 
 export default class GameManager {
     static instance = null;
@@ -21,9 +23,12 @@ export default class GameManager {
             return;
         }
         this.gameState = 'INIT';
-        this.soundHandler = new SoundHandler();
-        this.mouseHandler = null;
+        this.board = new Board(BOARD_ROWS, BOARD_COLS);
         this.gameView = new GameView();
+        this.pathFinder = new PathFinder(this.board);
+        this.pathDrawer = new PathDrawer(this.gameView);
+        this.soundHandler = new SoundHandler();
+        this.mouseHandler = new MouseHandler(this);
 
         this.currentLevelIndex = 0;
         this.remainingTime = 0;
@@ -31,6 +36,9 @@ export default class GameManager {
         this.timerInterval = 0;
         this.currentScore = 0;
         this.highestScore = parseInt(localStorage.getItem('pikachu-highest-score')) || 0;
+
+        this.firstSelectedPieceUI = null;
+        this.firstSelectedPieceMatrix = null;
     }
 
     init(matrix) {
@@ -53,8 +61,6 @@ export default class GameManager {
             // console.log('LEVEL INDEX TRONG loadLevel: ', levelIndex);
             this.currentLevelIndex = levelIndex;
             let levelConfig = LEVEL_CONFIGS[this.currentLevelIndex];
-            // console.log(levelConfig);
-            // console.log(this.currentLevelIndex);
             if (this.currentLevelIndex === 0) {
                 this.updateCurrentScore(0);
                 this.highestScore = 0;
@@ -63,14 +69,6 @@ export default class GameManager {
             this.totalTime = levelConfig.time;
             this.startTimer(levelConfig.time);
 
-            this.board = new Board(levelConfig.rows, levelConfig.cols);
-            // KIỂM TRA XEM NẾU NÓ NULL THÌ MỚI TẠO MỚI,
-            // CÒN KHÔNG THÌ CHỈ ĐỔI BOARD DO ĐỀU CÓ CÙNG 1 CƠ CHẾ BẤM CHUỘT
-            if (this.mouseHandler === null) {
-                this.mouseHandler = new MouseHandler(this.board, this.soundHandler);
-            } else {
-                this.mouseHandler.setBoard(this.board)
-            }
             this.gameView.handleUpdateText('current-level__value', this.currentLevelIndex + 1)
             this.spawnPokemon(levelConfig.types);
         }
@@ -182,7 +180,7 @@ export default class GameManager {
             this.loadLevel(null, this.currentLevelIndex)
             return;
         } else {
-            if (this.mouseHandler.pathFinder.isStillHaveConnection() === null) {
+            if (this.pathFinder.isStillHaveConnection() === null) {
                 this.shuffleRemaining();
             }
         }
@@ -256,5 +254,95 @@ export default class GameManager {
         } else {
             this.stopTimer();
         }
+    }
+
+    handleLevelSwap(levelIndex, newLevelItem) {
+        this.gameView.handleLevelSwapUI(newLevelItem);
+        this.loadLevel(null, levelIndex - 1);
+    }
+
+    handleHintButton() {
+        if (!this.pathFinder) return;
+        const result = this.pathFinder.isStillHaveConnection();
+        if (!result) return;
+        const {pieceOne, pieceTwo} = result;
+        this.gameView.highlightHint(pieceOne.getX(), pieceOne.getY(), pieceTwo.getX(), pieceTwo.getY());
+    }
+
+    handlePauseButton(pauseButton) {
+        this.pauseTimer();
+        this.gameView.handlePauseButtonUI(pauseButton);
+    }
+
+    resetFirstPieceSelection() {
+        this.firstSelectedPieceUI = null;
+        this.firstSelectedPieceMatrix = null;
+    }
+
+    handlePieceSelection(x, y) {
+        const currentPieceMatrix = this.board.getPiece(x, y);
+        // console.log(currentPieceMatrix)
+        const currentPieceUI = this.gameView.getPieceElement(x, y);
+
+        if (this.firstSelectedPieceUI === null) {
+            this.soundHandler.playSelect();
+            this.firstSelectedPieceUI = currentPieceUI;
+            this.firstSelectedPieceMatrix = currentPieceMatrix;
+            this.gameView.handlePieceSelectionUI(currentPieceUI);
+        } else {
+            const piece1 = this.firstSelectedPieceMatrix;
+            const piece2 = currentPieceMatrix;
+
+            // console.log("IN RA PIECE 1", piece1);
+            // console.log("IN RA PIECE 2", piece2);
+            // console.log("IN RA FIRST PIECE", this.firstSelectedPieceMatrix);
+            // console.log("IN RA CURRENT PIECE", currentPieceMatrix);
+            // console.log(piece1.getX())
+
+            let corners = {positionCornerOne: null, positionCornerTwo: null};
+
+            // console.log("KIỂM TRA ĐƯỜNG THẲNG")
+            if (this.pathFinder.canConnectStraight(piece1, piece2)) {
+                this.pathDrawer.drawStraightConnection(this.firstSelectedPieceUI, currentPieceUI);
+                // console.log("============KIỂM TRA ĐƯỜNG THẲNG THÀNH CÔNG");
+                // console.log(piece1, piece2);
+                this.handleMatch(piece1, piece2, this.firstSelectedPieceUI, currentPieceUI);
+            } else if (
+                (corners.positionCornerOne = this.pathFinder.canConnectOneCorner(piece1, piece2)) !== null
+            ) {
+                // console.log("KIỂM TRA ĐƯỜNG 1 GÓC");
+                this.pathDrawer.drawOneCornerConnection(this.firstSelectedPieceUI, currentPieceUI, corners.positionCornerOne);
+                // console.log("=================KIỂM TRA ĐƯỜNG 1 GÓC THÀNH CÔNG");
+                // console.log(piece1, piece2);
+                this.handleMatch(piece1, piece2, this.firstSelectedPieceUI, currentPieceUI);
+            } else if (
+                (corners = this.pathFinder.canConnectTwoCorner(piece1, piece2)) !== null
+            ) {
+                // console.log("KIỂM TRA ĐƯỜNG 2 GÓC");
+                this.pathDrawer.drawTwoCornerConnection(this.firstSelectedPieceUI, currentPieceUI, corners.positionCornerOne, corners.positionCornerTwo);
+                // console.log("==========KIỂM TRA ĐƯỜNG 2 GÓC THÀNH CÔNG");
+                // console.log(piece1, piece2);
+                this.handleMatch(piece1, piece2, this.firstSelectedPieceUI, currentPieceUI);
+            } else {
+                // console.log("xxxxxxxxx KHÔNG TÌM THẤY ĐƯỜNG NÀO");
+                this.handleError(piece1, piece2, this.firstSelectedPieceUI, currentPieceUI);
+            }
+        }
+    }
+
+    handleMatch(pieceMatrix1, pieceMatrix2, pieceUI1, pieceUI2) {
+        this.soundHandler.playMatch();
+        this.gameView.hidePieces(pieceUI1, pieceUI2);
+        this.resetFirstPieceSelection();
+        this.board.removePiece(pieceMatrix1);
+        this.board.removePiece(pieceMatrix2);
+        this.onMatchSuccess();
+    }
+
+    handleError(pieceMatrix1, pieceMatrix2, pieceUI1, pieceUI2) {
+        this.soundHandler.playError();
+        this.gameView.handleErrorUI(pieceUI1, pieceUI2);
+        this.firstSelectedPieceUI = pieceUI2;
+        this.firstSelectedPieceMatrix = pieceMatrix2;
     }
 }
