@@ -1,12 +1,16 @@
 import Piece from "../models/piece.js";
 import PathDrawer from "../path/path-drawer.js";
 import GameManager from "../game/game-manager.js";
+import PathFinder from "../models/path-finder.js";
+import GameView from "../view/game-view.js";
 
 export default class MouseHandler {
     constructor(board, soundHandler) {
         this.board = board;
         this.soundHandler = soundHandler;
-        this.pathDrawer = new PathDrawer();
+        this.gameView = new GameView();
+        this.pathFinder = new PathFinder(this.board);
+        this.pathDrawer = new PathDrawer(this.gameView);
 
         this.firstSelectedPieceUI = null;
         this.firstSelectedPieceMatrix = null;
@@ -24,6 +28,7 @@ export default class MouseHandler {
 
     setBoard(board) {
         this.board = board;
+        this.pathFinder = new PathFinder(this.board);
     }
 
     resetFirestPieceSelection() {
@@ -47,7 +52,7 @@ export default class MouseHandler {
                     currentPieceMatrix.getId(), currentPieceMatrix.getX(), currentPieceMatrix.getY()
                 );
 
-                currentPieceUI.addClass('selected');
+                this.gameView.handlePieceSelectionUI(currentPieceUI);
                 // SAU KHI ĐÃ CHỌN 1
             } else {
                 // VỊ TRÍ MA TRẬN CỦA PIECE
@@ -59,18 +64,18 @@ export default class MouseHandler {
                 let corners = {positionCornerOne, positionCornerTwo};
 
                 // XỬ LÝ KẾT NỐI THẲNG
-                if (this.board.canConnectStraight(piece1, piece2)) {
+                if (this.pathFinder.canConnectStraight(piece1, piece2)) {
                     this.pathDrawer.drawStraightConnection(this.firstSelectedPieceUI, currentPieceUI);
                     this.handleMatch(piece1, piece2, this.firstSelectedPieceUI, currentPieceUI);
                     // XỬ LÝ KÊẾT NỐI 1 GÓC
-                } else if ((corners.positionCornerOne = this.board.canConnectOneCorner(piece1, piece2)) !== null) {
+                } else if ((corners.positionCornerOne = this.pathFinder.canConnectOneCorner(piece1, piece2)) !== null) {
                     // console.log(positionCornerOne)
                     this.pathDrawer.drawOneCornerConnection(
                         this.firstSelectedPieceUI, currentPieceUI, corners.positionCornerOne
                     );
                     this.handleMatch(piece1, piece2, this.firstSelectedPieceUI, currentPieceUI);
                     // XỬ LÝ CHỌN SAI
-                } else if ((corners = this.board.canConnectTwoCorner(piece1, piece2)) !== null) {
+                } else if ((corners = this.pathFinder.canConnectTwoCorner(piece1, piece2)) !== null) {
                     // console.log('BẮT ĐẦU VẼ 2 GÓC')
                     // console.log(corners.positionCornerOne);
                     // console.log(corners.positionCornerTwo);
@@ -88,8 +93,10 @@ export default class MouseHandler {
 
     handleMatch(pieceMatrix1, pieceMatrix2, pieceUI1, pieceUI2) {
         this.soundHandler.playMatch();
-        pieceUI1.css('visibility', 'hidden');
-        pieceUI2.css('visibility', 'hidden');
+        // pieceUI1.css('visibility', 'hidden');
+        // pieceUI2.css('visibility', 'hidden');
+        this.gameView.hidePieces(pieceUI1, pieceUI2);
+
         this.resetFirestPieceSelection();
         this.board.removePiece(pieceMatrix1);
         this.board.removePiece(pieceMatrix2);
@@ -99,9 +106,7 @@ export default class MouseHandler {
 
     handleError(pieceMatrix1, pieceMatrix2, pieceUI1, pieceUI2) {
         this.soundHandler.playError();
-        pieceUI1.removeClass('selected');
-        pieceUI2.addClass('selected');
-
+        this.gameView.handleErrorUI(pieceUI1, pieceUI2);
         this.firstSelectedPieceUI = pieceUI2;
         this.firstSelectedPieceMatrix = pieceMatrix2;
     }
@@ -113,8 +118,7 @@ export default class MouseHandler {
             const levelIndex = newLevelItem.data('level');
             // console.log(newLevelItem);
             // console.log("LEVEL INDEX TRONG handleLevelSwap: ", levelIndex);
-            $('.level-list button').removeClass('active');
-            newLevelItem.find('button').addClass('active');
+            this.gameView.handleLevelSwapUI(newLevelItem);
             GameManager.getInstance().loadLevel(null, levelIndex - 1);
         })
     }
@@ -128,24 +132,15 @@ export default class MouseHandler {
     handleHintButton() {
         $('.suggest-btn').on('click', () => {
 
-            const result = this.board.isStillHaveConnection();
+            const result = this.pathFinder.isStillHaveConnection();
             // console.log(result);
             if (result === null) {
                 return;
             }
-
-            // console.log(result);
             const {pieceOne, pieceTwo} = result;
-            let divPieceOne = $(`#pokemon-board .pokemon-piece[data-row="${pieceOne.getX()}"][data-col="${pieceOne.getY()}"]`);
-            let divPieceTwo = $(`#pokemon-board .pokemon-piece[data-row="${pieceTwo.getX()}"][data-col="${pieceTwo.getY()}"]`);
+            this.gameView.highlightHint(pieceOne.getX(), pieceOne.getY(), pieceTwo.getX(), pieceTwo.getY());
+            // console.log(result);
 
-            divPieceOne.addClass('highlight');
-            divPieceTwo.addClass('highlight');
-
-            setTimeout(() => {
-                divPieceOne.removeClass('highlight');
-                divPieceTwo.removeClass('highlight');
-            }, 600)
         })
     }
 
@@ -153,13 +148,7 @@ export default class MouseHandler {
         const pauseButton = $('.pause-btn');
         pauseButton.on('click', () => {
             GameManager.getInstance().pauseTimer();
-
-            let icon = pauseButton.find('i');
-            if (icon.hasClass('fa-circle-pause')) {
-                icon.removeClass('fa-circle-pause').addClass('fa-circle-play');
-            } else {
-                icon.removeClass('fa-circle-play').addClass('fa-circle-pause');
-            }
+            this.gameView.handlePauseButtonUI(pauseButton);
         })
     }
 

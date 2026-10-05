@@ -4,6 +4,7 @@ import SoundHandler from "../audio/sound-handler.js";
 import MouseHandler from "../input/mouse-handler.js";
 import Piece from "../models/piece.js";
 import {LEVEL_CONFIGS} from "../utils/level-config.js";
+import GameView from "../view/game-view.js";
 
 export default class GameManager {
     static instance = null;
@@ -22,6 +23,8 @@ export default class GameManager {
         this.gameState = 'INIT';
         this.soundHandler = new SoundHandler();
         this.mouseHandler = null;
+        this.gameView = new GameView();
+
         this.currentLevelIndex = 0;
         this.remainingTime = 0;
         this.totalTime = 0;
@@ -32,20 +35,20 @@ export default class GameManager {
 
     init(matrix) {
         this.loadLevel(matrix, 0);
-        $('#highest-score-value').text(this.highestScore);
-        this.renderListLevel();
+        // $('#highest-score-value').text(this.highestScore);
+        this.gameView.handleUpdateText('highest-score-value', this.highestScore);
+        this.gameView.renderListLevel(this.currentLevelIndex);
     }
 
     loadLevel(matrix, levelIndex) {
-        const board = $('#pokemon-board');
-        board.find('.row-list-pieces').remove();
+        this.gameView.clearBoardUI();
 
         if (matrix !== null) {
             // this.board = new Board(BOARD_ROWS, BOARD_COLS);
             // this.mouseHandler = new MouseHandler(this.board, this.soundHandler);
 
             this.spawnTestMap(matrix)
-            this.renderBoard()
+            this.gameView.renderBoard(this.board)
         } else {
             // console.log('LEVEL INDEX TRONG loadLevel: ', levelIndex);
             this.currentLevelIndex = levelIndex;
@@ -68,7 +71,7 @@ export default class GameManager {
             } else {
                 this.mouseHandler.setBoard(this.board)
             }
-            $('.current-level__value').text(this.currentLevelIndex + 1);
+            this.gameView.handleUpdateText('current-level__value', this.currentLevelIndex + 1)
             this.spawnPokemon(levelConfig.types);
         }
 
@@ -125,10 +128,9 @@ export default class GameManager {
         }
 
         // XÓA ĐI BẢNG HIỆN TẠI
-        const board = $('#pokemon-board');
-        board.find('.row-list-pieces').remove();
+        this.gameView.clearBoardUI();
         // TẢI LẠI GIAO DIỆN VỚI MA TRẬN MỚI
-        this.renderBoard();
+        this.gameView.renderBoard(this.board);
     }
 
     spawnPokemon(types) {
@@ -144,7 +146,7 @@ export default class GameManager {
         this.shuffle(pokemonPool);
         // console.log(pokemonPool)
         this.board.fillBoard(pokemonPool);
-        this.renderBoard();
+        this.gameView.renderBoard(this.board);
     }
 
     spawnTestMap(matrix) {
@@ -160,84 +162,6 @@ export default class GameManager {
         }
     }
 
-    renderBoard() {
-        const board = $('#pokemon-board');
-
-        this.board.getMatrix().forEach(
-            function (row, rowIndex) {
-                // TẠO THẺ DIV ROW
-                const rowDiv = $('<div>');
-                rowDiv.addClass('row-list-pieces col-auto g-0');
-                // THÊM VÀO TABLE CỦA DIV
-                board.append(rowDiv);
-
-                // DUYỆT CÁC PHẦN TỬ TRONG ROW CỦA MAT TRẬN
-                row.forEach(
-                    function (piece, colIndex) {
-                        // TẠO RA THẺ DIV CHO MỖI Ô (Dù có Pokemon hay không)
-                        const pieceDiv = $('<div>');
-
-                        // THÊM CLASS CSS CỦA POKEMON PIECE VÀO
-                        pieceDiv.addClass('pokemon-piece');
-                        pieceDiv.attr('data-row', rowIndex);
-                        pieceDiv.attr('data-col', colIndex);
-
-
-                        if (piece === null) {
-                            pieceDiv.css('visibility', 'hidden');
-                            rowDiv.append(pieceDiv);
-                            return;
-                        }
-
-                        // KHAI BÁO GIÁ TRỊ CỦA QUÂN
-                        const currentPieceId = piece.getId();
-                        // const currentPieceRow = piece.getX();
-                        // const currentPieceCol = piece.getY();
-
-                        // THÊM INLINE CSS VÀO POKEMON PIECE
-                        pieceDiv.css(
-                            'background-position',
-                            `-${currentPieceId * PIECE_SIZE}px 0`
-                        )
-
-                        // THÊM THUỘC TÍNH CỦA PIECE VÀO THẺ DIV
-                        pieceDiv.attr('data-id', currentPieceId);
-                        // pieceDiv.attr('data-row', currentPieceRow);
-                        // pieceDiv.attr('data-col', currentPieceCol);
-
-                        // THÊM PIECE VÀO DIV ROW
-                        rowDiv.append(pieceDiv);
-                    }
-                )
-            }
-        );
-    }
-
-    renderListLevel() {
-        const container = $('.level-list');
-        container.find('.level-list__item').remove();
-
-        let listLevelConfig = LEVEL_CONFIGS.length;
-
-        for (let i = 0; i < listLevelConfig; i++) {
-            const item = $('<li>');
-            item.addClass('level-list__item'); // Bạn quên add class này cho thẻ li
-            item.attr('data-level', i + 1);
-
-            const button = $('<button>');
-            button.addClass('game-btn');
-            if (i === this.currentLevelIndex) {
-                button.addClass('active');
-            }
-
-            button.append($('<i class="fa-solid fa-circle-play"></i>'));
-            button.append($(`<span class="fw-bold text-light">Màn ${i + 1}</span>`))
-
-            item.append(button)
-            container.append(item)
-        }
-    }
-
     onMatchSuccess() {
         this.currentScore += 10;
         this.updateCurrentScore(this.currentScore);
@@ -246,10 +170,7 @@ export default class GameManager {
             this.currentLevelIndex++;
             // console.log(this.currentLevelIndex)
             // TÌM ĐẾN BẢNG CHƯA CÁC DIV PIECE
-            const board = $('#pokemon-board');
-            // KIẾM VÀ XÓA CÁC DIV CÓ CLASS LÀ pokemon-piece,
-            // DO CÒN THẺ DIV CONNECTION-LAYER
-            board.find('.pokemon-piece').remove();
+            this.gameView.clearBoardUI();
             if (this.currentLevelIndex < LEVEL_CONFIGS.length) {
                 string = 'CHUSC MỪNG ! BẠN ĐÃ VƯỢT MÀN !'
             } else {
@@ -257,13 +178,11 @@ export default class GameManager {
                 this.currentLevelIndex = 0;
             }
 
-            setTimeout(() => {
-                alert(string)
-            }, 200)
+            this.gameView.showMessage(string);
             this.loadLevel(null, this.currentLevelIndex)
             return;
         } else {
-            if (this.board.isStillHaveConnection() === null) {
+            if (this.mouseHandler.pathFinder.isStillHaveConnection() === null) {
                 this.shuffleRemaining();
             }
         }
@@ -274,12 +193,13 @@ export default class GameManager {
             this.currentScore = score;
             this.highestScore = score;
             localStorage.setItem("pikachu-highest-score", this.highestScore);
-            $('#current-score').text(this.currentScore);
+            // XỬ LÝ CẬP NHẬT ĐỂM TRÊN GIAO DIỆN
+            this.gameView.handleUpdateText('highest-score', this.currentScore);
+            this.gameView.handleUpdateText('current-score', this.currentScore);
             // console.log(this.currentScore);
-            $('#highest-score').text(this.currentScore);
-        } else  {
+        } else {
             this.currentScore = score;
-            $('#current-score').text(this.currentScore);
+            this.gameView.handleUpdateText('current-score', this.currentScore);
         }
     }
 
@@ -299,17 +219,16 @@ export default class GameManager {
 
         // GÁN SỐ THỜI GIAN, VÀ TRUYỀN DỮ LIỆU LÊN UI
         this.remainingTime = seconds;
-        $('.game-timer__text-value').text(this.formatTime(seconds));
+        let textTime = this.formatTime(seconds);
+        this.gameView.updateTimer(this.remainingTime, this.totalTime, textTime);
+        // $('.game-timer__text-value').text(this.formatTime(seconds));
 
         // BỘ ĐẾM THỜI GIAN BẮT ĐẦU CHẠY
         this.timerInterval = setInterval(() => {
             // TRWF THỜI GIAN VÀ CẬP NHẬT LẠI THỜI GIAN TEXT
             this.remainingTime--;
-            $('.game-timer__text-value').text(this.formatTime(this.remainingTime));
-
-            // TÍNH ĐỘ DÀI CỦA THÀNH THỜI GIAN (THANH XANH)
-            let percent = (this.remainingTime / this.totalTime) * 100;
-            $('#time-progress-bar').css('width', `${percent}%`);
+            let textTime = this.formatTime(this.remainingTime);
+            this.gameView.updateTimer(this.remainingTime, this.totalTime, textTime);
 
             // NẾU HEEST THOWIF GIAN THÌ RESET LẠI
             if (this.remainingTime <= 0) {
