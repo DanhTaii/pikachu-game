@@ -3,10 +3,6 @@ import {BOARD_ROWS} from "../../utils/constants.js";
 import Piece from "../piece.js";
 
 export class GravityLevel extends BaseLevel {
-    constructor() {
-        super();
-    }
-
     // HANDLE
     onMatchPiece(board, piece1, piece2) {
         // console.log("CHỌN GRAVITY LEVEL MATCH PIECE");

@@ -29,25 +29,23 @@ export default class GameManager {
         this.board = new Board(BOARD_ROWS, BOARD_COLS);
         this.pathFinder = new PathFinder(this.board);
 
-        // PHẦN VIEWS
-        this.gameView = new GameView();
-        this.pathDrawer = new PathDrawer(this.gameView);
-
-        // ÂM THANH
-        this.soundHandler = new SoundHandler();
-
-        // HÀNH ĐỘNG BAASM CHUỘT
-        this.mouseHandler = new MouseHandler(this);
-
         this.levels = [
             new ClassicLevel(1, 300, POKEMON_TYPES, BOARD_ROWS, BOARD_COLS),
             new GravityLevel(2, 300, POKEMON_TYPES, BOARD_ROWS, BOARD_COLS)
         ];
-
         // CÁC BIẾN GAME
         this.currentLevelIndex = 0;
-
         this.currentLevel = this.levels[this.currentLevelIndex];
+
+        // PHẦN VIEWS
+        this.gameView = new GameView(this.levels.length);
+        this.pathDrawer = new PathDrawer(this.gameView);
+
+        // ÂM THANH
+        this.soundHandler = new SoundHandler();
+        // HÀNH ĐỘNG BAASM CHUỘT
+        this.mouseHandler = new MouseHandler(this);
+
         this.remainingTime = 0;
         this.totalTime = 0;
         this.timerInterval = 0;
@@ -65,6 +63,7 @@ export default class GameManager {
         this.gameView.renderListLevel(this.currentLevelIndex);
     }
 
+    // ====================== TẠO RA MA TRẬN / TẠO DỰA TRÊN CẤP ĐỘ ======================
     loadLevel(matrix, levelIndex) {
         this.gameView.clearBoardUI();
 
@@ -187,7 +186,7 @@ export default class GameManager {
             // console.log(this.currentLevelIndex)
             // TÌM ĐẾN BẢNG CHƯA CÁC DIV PIECE
             this.gameView.clearBoardUI();
-            if (this.currentLevelIndex < LEVEL_CONFIGS.length) {
+            if (this.currentLevelIndex < this.levels.length) {
                 string = 'CHUSC MỪNG ! BẠN ĐÃ VƯỢT MÀN !'
             } else {
                 string = 'TUYEEJT VỜI ! BẠN ĐÃ PHÁ ĐẢO GAME !'
@@ -196,7 +195,9 @@ export default class GameManager {
             }
 
             this.gameView.showMessage(string);
-            this.loadLevel(null, this.currentLevelIndex)
+            this.gameView.handleLevelSwapUI(this.gameView.getLevelButton(this.currentLevelIndex + 1));
+            this.loadLevel(null, this.currentLevelIndex);
+
             return;
         } else {
             if (this.pathFinder.isStillHaveConnection() === null) {
@@ -220,7 +221,7 @@ export default class GameManager {
         }
     }
 
-    // ================ PHẦN XỬ LÝ THỜI GIAN ================
+    // ====================== PHẦN XỬ LÝ THỜI GIAN ======================
     formatTime(seconds) {
         let m = Math.floor(seconds / 60);
         let s = seconds % 60;
@@ -250,7 +251,8 @@ export default class GameManager {
             // NẾU HEEST THOWIF GIAN THÌ RESET LẠI
             if (this.remainingTime <= 0) {
                 clearInterval(this.timerInterval);
-                this.board = null;
+                this.board.setRows(BOARD_ROWS);
+                this.board.setCols(BOARD_COLS);
                 setTimeout(() => {
                     alert("HẾT GIỜ! BẠN ĐÃ THUA CUỘC!");
                     this.loadLevel(null, 0)
@@ -275,6 +277,7 @@ export default class GameManager {
         }
     }
 
+    // ====================== XỬ LÝ CÁC NÚT BẤM ======================
     handleLevelSwap(levelIndex, newLevelItem) {
         this.gameView.handleLevelSwapUI(newLevelItem);
         this.loadLevel(null, levelIndex - 1);
@@ -293,6 +296,7 @@ export default class GameManager {
         this.gameView.handlePauseButtonUI(pauseButton);
     }
 
+    // ====================== XỬ LÝ CLICK CHỌN ======================
     resetFirstPieceSelection() {
         this.firstSelectedPieceUI = null;
         this.firstSelectedPieceMatrix = null;

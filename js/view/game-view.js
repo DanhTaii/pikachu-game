@@ -1,8 +1,8 @@
 import {PIECE_SIZE} from "../utils/constants.js";
-import {LEVEL_CONFIGS} from "../utils/level-config.js";
 
 export default class GameView {
-    constructor() {
+    constructor(numberOfLevel) {
+        this.numberOfLevel = numberOfLevel;
         this.boardContainer = $('#pokemon-board');
         this.connectionLayer = $('#connection-layer');
     }
@@ -68,7 +68,7 @@ export default class GameView {
         const container = $('.level-list');
         container.find('.level-list__item').remove();
 
-        let listLevelConfig = LEVEL_CONFIGS.length;
+        let listLevelConfig = this.numberOfLevel;
 
         for (let i = 0; i < listLevelConfig; i++) {
             const item = $('<li>');
@@ -167,6 +167,10 @@ export default class GameView {
     getPieceElement(row, col) {
         // return $(`#pokemon-board .pokemon-piece[data-row="${row}"][data-col="${col}"]`);
         return this.boardContainer.find(`.pokemon-piece[data-row="${row}"][data-col="${col}"]`);
+    }
+
+    getLevelButton(levelNumber) {
+        return $('.level-list').find(`[data-level="${levelNumber}"]`);
     }
 
     highlightHint(row1, col1, row2, col2) {
