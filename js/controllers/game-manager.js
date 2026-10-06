@@ -3,10 +3,12 @@ import {BOARD_COLS, BOARD_ROWS, PIECE_SIZE, POKEMON_TYPES} from "../utils/consta
 import SoundHandler from "../services/sound-handler.js";
 import MouseHandler from "./mouse-handler.js";
 import Piece from "../models/piece.js";
-import {LEVEL_CONFIGS} from "../utils/level-config.js";
 import GameView from "../view/game-view.js";
 import PathFinder from "../models/path-finder.js";
 import PathDrawer from "../view/path-drawer.js";
+// import BaseLevel from "../models/level/base-level.js";
+import {ClassicLevel} from "../models/level/classic-level.js";
+import {GravityLevel} from "../models/level/gravity-level.js";
 
 export default class GameManager {
     static instance = null;
@@ -23,14 +25,29 @@ export default class GameManager {
             return;
         }
         this.gameState = 'INIT';
+        // LOGIC TÌM ĐƯỜNG VÀ BOARD
         this.board = new Board(BOARD_ROWS, BOARD_COLS);
-        this.gameView = new GameView();
         this.pathFinder = new PathFinder(this.board);
+
+        // PHẦN VIEWS
+        this.gameView = new GameView();
         this.pathDrawer = new PathDrawer(this.gameView);
+
+        // ÂM THANH
         this.soundHandler = new SoundHandler();
+
+        // HÀNH ĐỘNG BAASM CHUỘT
         this.mouseHandler = new MouseHandler(this);
 
+        this.levels = [
+            new ClassicLevel(1, 300, POKEMON_TYPES, BOARD_ROWS, BOARD_COLS),
+            new GravityLevel(2, 300, POKEMON_TYPES, BOARD_ROWS, BOARD_COLS)
+        ];
+
+        // CÁC BIẾN GAME
         this.currentLevelIndex = 0;
+
+        this.currentLevel = this.levels[this.currentLevelIndex];
         this.remainingTime = 0;
         this.totalTime = 0;
         this.timerInterval = 0;
@@ -60,17 +77,18 @@ export default class GameManager {
         } else {
             // console.log('LEVEL INDEX TRONG loadLevel: ', levelIndex);
             this.currentLevelIndex = levelIndex;
-            let levelConfig = LEVEL_CONFIGS[this.currentLevelIndex];
+            this.currentLevel = this.levels[this.currentLevelIndex];
+
             if (this.currentLevelIndex === 0) {
                 this.updateCurrentScore(0);
                 this.highestScore = 0;
                 localStorage.setItem("pikachu-highest-score", this.highestScore);
             }
-            this.totalTime = levelConfig.time;
-            this.startTimer(levelConfig.time);
+            this.totalTime = this.currentLevel.timeLimit;
+            this.startTimer(this.currentLevel.timeLimit);
 
             this.gameView.handleUpdateText('current-level__value', this.currentLevelIndex + 1)
-            this.spawnPokemon(levelConfig.types);
+            this.spawnPokemon(this.currentLevel.types);
         }
 
     }
@@ -174,6 +192,7 @@ export default class GameManager {
             } else {
                 string = 'TUYEEJT VỜI ! BẠN ĐÃ PHÁ ĐẢO GAME !'
                 this.currentLevelIndex = 0;
+                this.currentLevel = this.levels[this.currentLevelIndex];
             }
 
             this.gameView.showMessage(string);
@@ -331,11 +350,18 @@ export default class GameManager {
     }
 
     handleMatch(pieceMatrix1, pieceMatrix2, pieceUI1, pieceUI2) {
+        // console.log("MA TRẬN XỬ LÝ MATCH");
+        // XỬ LÝ MA TRAJAN MỚI KHI CÓ LEVEL MỚI
+        this.currentLevel.onMatchPiece(this.board, pieceMatrix1, pieceMatrix2);
+
         this.soundHandler.playMatch();
         this.gameView.hidePieces(pieceUI1, pieceUI2);
         this.resetFirstPieceSelection();
-        this.board.removePiece(pieceMatrix1);
-        this.board.removePiece(pieceMatrix2);
+
+        //XÓA ĐI BÀN CỜ HIỆN TẠI
+        this.gameView.clearBoardUI();
+        // XỬ LÝ GIAO DIỆN DỰA VÀO MA TRẬN MỚI
+        this.gameView.renderBoard(this.board);
         this.onMatchSuccess();
     }
 

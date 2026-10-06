@@ -35,7 +35,7 @@ export default class Board {
         )
     }
 
-    fillBoard(piecePool, positions) {
+    fillBoard(piecePool) {
         let indexPool = 0;
         for (let i = 1; i < this.rows - 1; i++) {
             for (let j = 1; j < this.cols - 1; j++) {

@@ -61,7 +61,7 @@ export default class GameView {
     }
 
     clearBoardUI() {
-        $('#pokemon-board').find('.row-list-pieces').remove();
+        this.boardContainer.find('.row-list-pieces').remove();
     }
 
     renderListLevel(currentLevelIndex) {

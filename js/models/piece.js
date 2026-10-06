@@ -24,5 +24,13 @@ export default class Piece {
         return this.position.getY();
     }
 
+    setX(x) {
+        this.position.setX(x);
+    }
+
+    setY(y) {
+        this.position.getY(y);
+    }
+
 
 }
