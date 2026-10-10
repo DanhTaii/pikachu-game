@@ -12,13 +12,13 @@
 <body>
 
 <div class="game-container container">
-    <!--    <header class="game-header">-->
-    <!--        <section class="game-logo fw-bold text-lg-center">-->
-    <!--            <img class="game-icon" src="../assets/img/pikachu.png" alt="Pikachu">-->
+    <!--    <header class="controllers-header">-->
+    <!--        <section class="controllers-logo fw-bold text-lg-center">-->
+    <!--            <img class="controllers-icon" src="../assets/img/pikachu.png" alt="Pikachu">-->
     <!--            <h4 class="fw-bold mt-2 text-light ms-2">PikaMatch Arcade</h4>-->
     <!--        </section>-->
 
-    <!--        <section class="game-utility">-->
+    <!--        <section class="controllers-utility">-->
     <!--            <button class="utility-items">-->
     <!--                <i class="fa-solid fa-volume"></i>-->
     <!--            </button>-->
@@ -30,7 +30,7 @@
             <div class="game-intro__container">
                 <div class="game-info-value current-level game-box">
                     <span class="current-level__title text-light">MÀN</span>
-                    <span class="current-level__value text-dark-gray">1</span>
+                    <span id="current-level__value" class="current-level__value text-dark-gray">1</span>
                 </div>
 
                 <div class="game-score game-box d-flex align-items-center justify-content-center">
@@ -78,7 +78,7 @@
                     <div class="level-body mt-2">
                         <ul class="level-list mt-4">
                             <!--                            <li class="level-list__item" data-level="1">-->
-                            <!--                                <button type="button" class="game-btn active">-->
+                            <!--                                <button type="button" class="controllers-btn active">-->
                             <!--                                    <i class="fa-solid fa-circle-play "></i>-->
                             <!--                                    <span class="fw-bold text-light">-->
                             <!--                                        Màn 1-->
@@ -87,7 +87,7 @@
                             <!--                            </li>-->
 
                             <!--                            <li class="level-list__item" data-level="2">-->
-                            <!--                                <button type="button" class="game-btn">-->
+                            <!--                                <button type="button" class="controllers-btn">-->
                             <!--                                    <i class="fa-solid fa-circle-play"></i>-->
                             <!--                                    <span class="fw-bold text-light">-->
                             <!--                                        Màn 2-->
@@ -96,7 +96,7 @@
                             <!--                            </li>-->
 
                             <!--                            <li class="level-list__item" data-level="3">-->
-                            <!--                                <button type="button" class="game-btn">-->
+                            <!--                                <button type="button" class="controllers-btn">-->
                             <!--                                    <i class="fa-solid fa-circle-play"></i>-->
                             <!--                                    <span class="fw-bold text-light">-->
                             <!--                                        Màn 3-->
@@ -105,7 +105,7 @@
                             <!--                            </li>-->
 
                             <!--                            <li class="level-list__item" data-level="4">-->
-                            <!--                                <button type="button" class="game-btn">-->
+                            <!--                                <button type="button" class="controllers-btn">-->
                             <!--                                    <i class="fa-solid fa-circle-play"></i>-->
                             <!--                                    <span class="fw-bold text-light">-->
                             <!--                                            Màn 4-->
@@ -114,7 +114,7 @@
                             <!--                            </li>-->
 
                             <!--                            <li class="level-list__item" data-level="5">-->
-                            <!--                                <button type="button" class="game-btn">-->
+                            <!--                                <button type="button" class="controllers-btn">-->
                             <!--                                    <i class="fa-solid fa-circle-play"></i>-->
                             <!--                                    <span class="fw-bold text-light">-->
                             <!--                                        Màn 5-->
@@ -123,7 +123,7 @@
                             <!--                            </li>-->
 
                             <!--                            <li class="level-list__item" data-level="6">-->
-                            <!--                                <button type="button" class="game-btn">-->
+                            <!--                                <button type="button" class="controllers-btn">-->
                             <!--                                    <i class="fa-solid fa-circle-play"></i>-->
                             <!--                                    <span class="fw-bold text-light">-->rp
                             <!--                                        Màn 6-->
@@ -180,8 +180,8 @@
         </section>
     </main>
 
-    <!--    <footer class="game-footer">-->
-    <!--        <div class="game-footer-content row g-0">-->
+    <!--    <footer class="controllers-footer">-->
+    <!--        <div class="controllers-footer-content row g-0">-->
     <!--            <span>© Copyright 2010 - 2026 PikaMatch.net</span>-->
     <!--        </div>-->
     <!--    </footer>-->

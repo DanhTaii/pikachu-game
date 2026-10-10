@@ -1,10 +1,4 @@
-import Board from "./models/board.js";
-import {BOARD_COLS, BOARD_ROWS, PIECE_SIZE, POKEMON_TYPES} from "./utils/constants.js";
-import SoundHandler from "./audio/sound-handler.js";
-import MouseHandler from "./input/mouse-handler.js";
-import Piece from "./models/piece.js";
-
-import GameManager from "./game/game-manager.js";
+import GameManager from "./controllers/game-manager.js";
 
 // const TEST_MATRIX = [
 //     [null, null, null, null, null, null,    3, null],
@@ -31,8 +25,8 @@ const TEST_MATRIX = [
 $(document).ready(function () {
     const game = GameManager.getInstance();
 
-    // game.loadLevel(TEST_MATRIX);
-    // game.loadLevel(null, 0);
+    // controllers.loadLevel(TEST_MATRIX);
+    // controllers.loadLevel(null, 0);
     game.init(null);
-    // game.init(TEST_MATRIX);
+    // controllers.init(TEST_MATRIX);
 });
