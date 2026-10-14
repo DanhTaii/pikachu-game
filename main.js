@@ -8,11 +8,13 @@ const CELL_HEIGHT = 52;
 const boardElement = document.getElementById("board");
 const board = createEmptyBoard(BOARD_ROWS, BOARD_COLS);
 let firstSelected = null;
+let currentLevel = 2;
 
 initGame();
-fillBoard();
-renderBoard();
 
+// ===================================================================
+// CÁC HÀM KHỞI TẠO BÀN CỜ
+// ===================================================================
 function createEmptyBoard(rows, cols) {
     return Array.from({length: rows}, () => Array(cols).fill(null));
 }
@@ -43,7 +45,30 @@ function fillBoard() {
     }
 }
 
+function renderBoard() {
+    for (let row = 0; row < BOARD_ROWS; row++) {
+        for (let col = 0; col < BOARD_COLS; col++) {
+            const pokemonId = board[row][col];
+            const cell = boardElement.rows[row].cells[col];
+
+            if (pokemonId === null) {
+                cell.style.backgroundImage = "none";
+                cell.style.border = "none";
+            } else {
+                // Nếu có Pokemon thì mới in hình
+                cell.style.backgroundImage = "url('assets/img/pieces-sprite.png')";
+                cell.style.backgroundRepeat = "no-repeat";
+                cell.style.backgroundSize = `${POKEMON_TYPES * CELL_WIDTH}px ${CELL_HEIGHT}px`;
+                cell.style.backgroundPosition = `-${pokemonId * CELL_WIDTH}px 0`;
+                cell.style.border = "2px solid var(--border-line-color, #253349)"; // Giữ lại viền
+            }
+        }
+    }
+    console.log("LEVEL: " + currentLevel)
+}
+
 function initGame() {
+    // TẠO CÁC HÀNG CỘT TRONG TABLE ĐỂ XỬ LÝ GIAO DIỆN
     for (let row = 0; row < BOARD_ROWS; row++) {
         const rowElement = document.createElement("tr");
 
@@ -51,32 +76,41 @@ function initGame() {
             const cell = document.createElement("td");
             cell.id = `cell-${row}-${col}`;
             cell.classList.add("cell");
+            // THÊM XỬ LÝ VÔ Ô LÚC THÊM LUÔN
             cell.addEventListener("click", () => handleCellClick(row, col));
             rowElement.appendChild(cell);
         }
 
         boardElement.appendChild(rowElement);
     }
+
+    currentLevel = 1;
+    fillBoard();
+    renderBoard();
 }
 
-function renderBoard() {
+function resetGame() {
+    // XÓA ĐI MA TRẬN CŨ
     for (let row = 0; row < BOARD_ROWS; row++) {
         for (let col = 0; col < BOARD_COLS; col++) {
-            const pokemonId = board[row][col];
-            const cell = boardElement.rows[row].cells[col];
-
-            if (pokemonId === null) continue;
-
-            cell.style.backgroundImage = "url('assets/img/pieces-sprite.png')";
-            cell.style.backgroundRepeat = "no-repeat";
-            // Tính lại Background Size: Chiều dài dải ảnh = 36 loại * 42px, Chiều cao = 52px
-            cell.style.backgroundSize = `${POKEMON_TYPES * CELL_WIDTH}px ${CELL_HEIGHT}px`;
-            // Dịch chuyển ảnh theo chiều ngang một khoảng tương ứng với Chiều rộng (42px)
-            cell.style.backgroundPosition = `-${pokemonId * CELL_WIDTH}px 0`;
+            board[row][col] = null;
         }
     }
+
+    // XÓA ĐI firstSelected hiện đang chọn
+    if (firstSelected) {
+        const firstPieceElement = boardElement.rows[firstSelected.row].cells[firstSelected.col];
+        firstPieceElement.classList.remove("active");
+        firstSelected = null;
+    }
+
+    fillBoard();
+    renderBoard();
 }
 
+// ===================================================================
+// XỬ LÝ CLICK CHUỘT
+// ===================================================================
 function handleCellClick(row, col) {
     const currentPieceId = board[row][col];
 
@@ -109,11 +143,24 @@ function handleCellClick(row, col) {
             // XÓA TRÊN UI
             firstPieceElement.style.backgroundImage = "none";
             currentPieceElement.style.backgroundImage = "none";
+            firstPieceElement.style.border = "none"
+            currentPieceElement.style.border = "none"
 
             firstPieceElement.classList.remove("active");
             currentPieceElement.classList.remove("active");
 
+            // DESTRUCTING ASSIGNMENT
+            let [r1, c1, r2, c2] = [firstSelected.row, firstSelected.col, row, col];
+
             firstSelected = null;
+
+            // PHẢI THỰC HIỆN GÁN BIẾN LẦN LƯỢT
+            // DO setTimeout sẽ đợi cho hàm chạy hết sau 200ms nó mới chạy
+            // => lúc đó đã biến mất thằng firstSelected
+            setTimeout(() => {
+                applyLevelMechanic(r1, c1, r2, c2);
+            }, 200);
+
         } else {
             // TRƯỜNG HỢP KHÁC NHAU THÌ ĐỔI SANG Ô MỚI CLICK
             firstPieceElement.classList.remove("active");
@@ -129,6 +176,9 @@ function handleCellClick(row, col) {
 
 }
 
+// ===================================================================
+// CÁC HÀM TÌM KIẾM ĐƯỜNG ĐI
+// ===================================================================
 function isCellEmpty(r, c) {
     return board[r][c] === null;
 }
@@ -234,6 +284,9 @@ function checkConnection(r1, c1, r2, c2) {
     return null;
 }
 
+// ===================================================================
+// CÁC HÀM VẼ ĐƯỜNG NỐI
+// ===================================================================
 function calculateCenterPiece(r, c) {
     // LẤY VỊ TRÍ (TOP, LEFT) VÀ KÍCH THƯỚC (WIDTH, HEIGHT) HIỆN TẠI CỦA BOARD
     // const boardRect = boardElement.getBoundingClientRect();
@@ -264,7 +317,7 @@ function drawLine(x1, y1, x2, y2) {
 
     if (x1 === x2) {
         // VẼ ĐƯỜNG THẲNG DỌC
-        line.style.left = `${x1 - 1}px`; // Trừ đi một nửa độ dày (1.5px) để đường thẳng nằm chính giữa tâm
+        line.style.left = `${x1 - 1}px`;
         line.style.top = `${Math.min(y1, y2)}px`;
         line.style.width = "3px";
         line.style.height = `${Math.abs(y2 - y1)}px`;
@@ -314,4 +367,62 @@ function drawPath(r1, c1, r2, c2, pathResult) {
     } else if (pathResult.type === 'two_corner') {
         drawTwoCornerConnection(r1, c1, r2, c2, pathResult.corners.corner1, pathResult.corners.corner2);
     }
+}
+
+// ===================================================================
+// CÁC HÀM XWR LÝ LOGIC LEVEL
+// ===================================================================
+const levelButtons = document.querySelectorAll('#list-level button');
+levelButtons.forEach(button => {
+    button.addEventListener('click', (e) => {
+        let currentLevelButton = e.currentTarget
+        currentLevel = parseInt(currentLevelButton.getAttribute('data-level'))
+        levelButtons.forEach(btn => btn.classList.remove('active'));
+        currentLevelButton.classList.add('active');
+        resetGame();
+    })
+})
+
+// ÁP DỤNG LEVEL KHI THỰC THI CELL-CLICK
+function applyLevelMechanic(r1, c1, r2, c2) {
+    switch (currentLevel) {
+        case 1:
+            break;
+        case 2:
+            applyGravity(r1, c1, r2, c2);
+            break;
+    }
+}
+
+function applyGravity(r1, c1, r2, c2) {
+    // console.log("CHỌN GRAVITY LEVEL MATCH PIECE");
+
+    let currentPieces = [{x: r1, y: c1}, {x: r2, y: c2}];
+    board[r1][c1] = null;
+    board[r2][c2] = null;
+
+    // console.log("MA TRẬN TRUOWSC KHI ĐỔI VỊ TRÍ");
+    // board.printMatrix();
+    // DUYỆT QUA TỪNG PIECE
+    for (let piece of currentPieces) {
+        let col = piece.y;
+        // DUYỆT TỪ DÒNG DƯỚI CUOOIS LÊN
+        for (let row = BOARD_ROWS - 2; row >= 1; row--) {
+            // NẾU NHƯ Ô CỦA PIECE HIỆN TẠI VỚI DÒNG HIỆN TẠI TRỐNG
+            if (isCellEmpty(row, col)) {
+                for (let rowAbove = row - 1; rowAbove >= 1; rowAbove--) {
+                    let pieceAbove = board[rowAbove][col];
+
+                    if (pieceAbove !== null) {
+                        board[row][col] = pieceAbove;
+                        board[rowAbove][col] = null;
+                        break
+                    }
+                }
+            }
+        }
+    }
+    // console.log("MA TRẬN SAU KHI ĐỔI VỊ TRÍ");
+    // board.printMatrix();
+    renderBoard()
 }
