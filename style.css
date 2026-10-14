@@ -270,7 +270,7 @@ main section {
     width: 42px;
     height: 52px;
 
-    background-image: url("../assets/img/pieces-sprite.png");
+    background-image: url("assets/img/pieces-sprite.png");
     /*ngăn ảnh lặp*/
     background-repeat: no-repeat;
     /*cho các khối nằm liền kề nhau */

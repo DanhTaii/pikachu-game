@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Classic Pikachu Game</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .dot {
+            background-color: green;
+        }
+
+        .cell {
+            width: 42px;
+            height: 52px;
+            border: 2px solid black;
+
+            /*border: 2px solid var(--bg-color);*/
+            border-radius: 5px;
+
+        }
+
+        .cell:hover {
+            cursor: pointer;
+        }
+
+        .cell.active {
+            filter: brightness(40%);
+            pointer-events: none;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 1200px;
+            margin: 0 auto;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        ul li {
+            margin: 10px 0;
+        }
+
+        button {
+            font-size: 30px;
+        }
+
+        button:hover {
+            cursor: pointer;
+        }
+
+        button.active {
+            background-color: black;
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+
+<div>
+    <ul id="list-level">
+        <li>
+            <button class="active" data-level="1">
+                LEVEL 1
+            </button>
+        </li>
+        <li>
+            <button data-level="2">
+                LEVEL 2
+            </button>
+        </li>
+        <li>
+            <button data-level="3">
+                LEVEL 3
+            </button>
+        </li>
+        <li>
+            <button data-level="4">
+                LEVEL 4
+            </button>
+        </li>
+        <li>
+            <button data-level="5">
+                LEVEL 5
+            </button>
+        </li>
+        <li>
+            <button data-level="6">
+                LEVEL 6
+            </button>
+        </li>
+    </ul>
+</div>
+
+<table id="board" style="margin: 0 auto">
+
+</table>
+
+<!--<script type="module" src="../main.js"></script>-->
+<script src="main.js"></script>
+
+</body>
+</html>
