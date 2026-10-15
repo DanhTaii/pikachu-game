@@ -2,8 +2,8 @@ const BOARD_ROWS = 11;
 const BOARD_COLS = 18;
 const POKEMON_TYPES = 36;
 const POKEMON_PER_TYPE = 4;
-const CELL_WIDTH = 42;
-const CELL_HEIGHT = 52;
+const CELL_WIDTH = 44;
+const CELL_HEIGHT = 55;
 
 const boardElement = document.getElementById("board");
 const board = createEmptyBoard(BOARD_ROWS, BOARD_COLS);
@@ -51,20 +51,27 @@ function renderBoard() {
             const pokemonId = board[row][col];
             const cell = boardElement.rows[row].cells[col];
 
+            // PHẢI RESET LẠI VỀ MÀU MẶC ĐỊNH NẾU KHÔNG THÌ SẼ LÀ MÀU ĐEN
+            cell.style.backgroundColor = "transparent";
+
             if (pokemonId === null) {
                 cell.style.backgroundImage = "none";
                 cell.style.border = "none";
+            } else if (pokemonId === -1) {
+                // console.log(pokemonId)
+                cell.style.backgroundColor = "black";
+                cell.style.backgroundImage = "none";
             } else {
                 // Nếu có Pokemon thì mới in hình
-                cell.style.backgroundImage = "url('assets/img/pieces-sprite.png')";
+                cell.style.backgroundImage = "url('pieces-sprite.png')";
                 cell.style.backgroundRepeat = "no-repeat";
                 cell.style.backgroundSize = `${POKEMON_TYPES * CELL_WIDTH}px ${CELL_HEIGHT}px`;
                 cell.style.backgroundPosition = `-${pokemonId * CELL_WIDTH}px 0`;
-                cell.style.border = "2px solid var(--border-line-color, #253349)"; // Giữ lại viền
+                cell.style.border = "2px solid black";
             }
         }
     }
-    console.log("LEVEL: " + currentLevel)
+    // console.log("LEVEL: " + currentLevel)
 }
 
 function initGame() {
@@ -90,6 +97,17 @@ function initGame() {
 }
 
 function resetGame() {
+    if (stoneTimer !== null) {
+        // XÓA BỎ THỜI GIAN ĐANG CHJAY NGẦM
+        // KHÔNG THỂ LÀM BẰNG NULL DO CHỈ ĐANG XÓA BIẾN ĐƯỢC GÁN
+        // CHỨ KHÔNG LOẠI BỎ HẲN CÁI ĐANG CHẠY NGẦM
+        clearTimeout(stoneTimer)
+        // CHO NÓ RỖNG
+        stoneTimer = null;
+    }
+    // CHO THNAHF MẢNG RỖNG PHÒNG TRƯỜNG HỢP CHUYỂN LEVEL MÀ VẪN ĐANG CHẠY LEVLE 3
+    hiddenPieces = []
+
     // XÓA ĐI MA TRẬN CŨ
     for (let row = 0; row < BOARD_ROWS; row++) {
         for (let col = 0; col < BOARD_COLS; col++) {
@@ -106,6 +124,10 @@ function resetGame() {
 
     fillBoard();
     renderBoard();
+
+    if (currentLevel === 3) {
+        spawnObstacle(1800, 20)
+    }
 }
 
 // ===================================================================
@@ -135,7 +157,7 @@ function handleCellClick(row, col) {
         let path = checkConnection(row, col, firstSelected.row, firstSelected.col);
 
         if (path !== null) {
-            drawPath(firstSelected.row, firstSelected.col, row, col, path);
+            drawPath(row, col, firstSelected.row, firstSelected.col, path);
             // XÓA TRÊN MẢNG HIỆN TẠI
             board[firstSelected.row][firstSelected.col] = null;
             board[row][col] = null;
@@ -150,7 +172,7 @@ function handleCellClick(row, col) {
             currentPieceElement.classList.remove("active");
 
             // DESTRUCTING ASSIGNMENT
-            let [r1, c1, r2, c2] = [firstSelected.row, firstSelected.col, row, col];
+            let [r1, c1, r2, c2] = [row, col, firstSelected.row, firstSelected.col];
 
             firstSelected = null;
 
@@ -387,13 +409,22 @@ levelButtons.forEach(button => {
 function applyLevelMechanic(r1, c1, r2, c2) {
     switch (currentLevel) {
         case 1:
+            renderBoard();
             break;
         case 2:
             applyGravity(r1, c1, r2, c2);
             break;
+        case 3:
+            renderBoard();
+            break;
+        default:
+            renderBoard();
     }
 }
 
+// ==========================================
+// LEVEL 2: TRỌNG LỰC
+// ==========================================
 function applyGravity(r1, c1, r2, c2) {
     // console.log("CHỌN GRAVITY LEVEL MATCH PIECE");
 
@@ -425,4 +456,48 @@ function applyGravity(r1, c1, r2, c2) {
     // console.log("MA TRẬN SAU KHI ĐỔI VỊ TRÍ");
     // board.printMatrix();
     renderBoard()
+}
+
+let hiddenPieces = []
+let stoneTimer = null;
+
+function spawnObstacle(time, numberOfStones) {
+    // TRẢ LẠI CÁC PIECE ĐÃ BỊ VAAJT CẢN ĐÈ LÊN
+    if (hiddenPieces.length > 0) {
+        for (let piece of hiddenPieces) {
+            if (board[piece.r][piece.c] === -1) {
+                board[piece.r][piece.c] = piece.id;
+            }
+        }
+    }
+    hiddenPieces = [];
+
+    // LAASY RA CÁC PIECE HIỆN ĐANG CÓ TRÊN BÀN CỜ
+    let availablePieces = [];
+    for (let i = 0; i < BOARD_ROWS; i++) {
+        for (let j = 0; j < BOARD_COLS; j++) {
+            if (board[i][j] !== null) {
+                availablePieces.push({r: i, c: j, id: board[i][j]})
+            }
+        }
+    }
+
+    let numberSpawnStones = Math.min(numberOfStones, availablePieces.length);
+
+    for (let i = 0; i < numberSpawnStones; i++) {
+        // TẠO RA VỊ TRÍ NGẪU NHIÊN
+        let index = Math.floor(Math.random() * availablePieces.length);
+
+        let hiddenPiece = availablePieces.splice(index, 1)[0];
+
+        board[hiddenPiece.r][hiddenPiece.c] = -1;
+        hiddenPieces.push(hiddenPiece)
+    }
+
+    renderBoard()
+
+    stoneTimer = setTimeout(() => {
+        spawnObstacle(time, numberOfStones)
+    }, time);
+
 }
