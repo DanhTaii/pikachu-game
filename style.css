@@ -30,6 +30,11 @@
     text-align: center;
 }
 
+.cell.highlight {
+    box-shadow: 0 5px 15px #214ee5;
+    border: 2px solid #214ee5 !important;
+}
+
 body {
     /*display: flex;*/
     /*justify-content: center;*/

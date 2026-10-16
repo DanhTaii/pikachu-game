@@ -22,7 +22,9 @@ initGame();
 // CÁC HÀM KHỞI TẠO BÀN CỜ
 // ===================================================================
 function createEmptyBoard(rows, cols) {
-    return Array.from({length: rows}, () => Array(cols).fill(null));
+    return Array.from(
+        {length: rows},
+        () => Array(cols).fill(null));
 }
 
 function shuffle(array) {
@@ -105,7 +107,7 @@ function initGame() {
 }
 
 function resetGame() {
-    currentTotalPokemon = 0;
+    // currentTotalPokemon = 0;
     if (stoneTimer !== null) {
         // XÓA BỎ THỜI GIAN ĐANG CHJAY NGẦM
         // KHÔNG THỂ LÀM BẰNG NULL DO CHỈ ĐANG XÓA BIẾN ĐƯỢC GÁN
@@ -324,6 +326,53 @@ function canConnectTwoCorner(r1, c1, r2, c2) {
     return null;
 }
 
+function isStillHaveConnection() {
+    let groups = {}
+
+    // NHÓM CÁC PIECE CÓ CÙNG ID LẠI THÀNH 1 MẢNG
+    for (let i = 0; i < BOARD_ROWS; i++) {
+        for (let j = 0; j < BOARD_COLS; j++) {
+            let pieceId = board[i][j];
+            //NẾU PIECE KHÁC NULL
+            if (pieceId !== null) {
+                // NẾU CHƯA CÓ MẢNG CHO ID HIỆN TỊA
+                if (!groups[pieceId]) {
+                    // TẠO MẢNG MỚI
+                    groups[pieceId] = [];
+                }
+                // THÊM NÓ VÀO MẢNG VỊ TRÍ ID
+                groups[pieceId].push({row: i, col: j, id: pieceId});
+            }
+        }
+    }
+
+    for (let index in groups) {
+        // DANH SÁCH CÁC PIECE DỰA TRÊN INDEX
+        let pieceList = groups[index];
+        for (let i = 0; i < pieceList.length - 1; i++) {
+            for (let j = i + 1; j < pieceList.length; j++) {
+                // VỊ TRÍ ĐẦU TRONG INDEX HIỆN TẠI
+                let piece1 = pieceList[i];
+                // VỊ TRÍ THỨ 2 TRONG INDEX HIỆN TẠI SAU VỊ TRÍ ĐẦU
+                let piece2 = pieceList[j];
+
+                if (
+                    canConnectStraight(piece1.row, piece1.col, piece2.row, piece2.col) === true ||
+                    canConnectOneCorner(piece1.row, piece1.col, piece2.row, piece2.col) !== null ||
+                    canConnectTwoCorner(piece1.row, piece1.col, piece2.row, piece2.col) !== null
+                ) {
+                    return {
+                        pieceOne: piece1,
+                        pieceTwo: piece2
+                    }
+                }
+            }
+        }
+    }
+
+    return null;
+}
+
 function checkConnection(r1, c1, r2, c2) {
     // Nếu khác ID thì loại
     if (board[r1][c1] !== board[r2][c2]) {
@@ -430,6 +479,30 @@ function drawPath(r1, c1, r2, c2, pathResult) {
     } else if (pathResult.type === 'two_corner') {
         drawTwoCornerConnection(r1, c1, r2, c2, pathResult.corners.corner1, pathResult.corners.corner2);
     }
+}
+
+// ===================================================================
+// XỬ LÝ NÚT GỢI Ý
+// ===================================================================
+const hintButton = document.getElementById("hint-button");
+hintButton.addEventListener('click', (e) => {
+    const result = isStillHaveConnection();
+    if (!result) return;
+    const {pieceOne, pieceTwo} = result;
+    highlightHint(pieceOne.row, pieceOne.col, pieceTwo.row, pieceTwo.col);
+})
+
+function highlightHint(row1, col1, row2, col2) {
+    let divPieceOne =boardElement.rows[row1].cells[col1]
+    let divPieceTwo = boardElement.rows[row2].cells[col2]
+
+    divPieceOne.classList.add('highlight');
+    divPieceTwo.classList.add('highlight');
+
+    setTimeout(() => {
+        divPieceOne.classList.remove('highlight');
+        divPieceTwo.classList.remove('highlight');
+    }, 600)
 }
 
 // ===================================================================
