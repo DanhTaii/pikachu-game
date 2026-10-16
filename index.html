@@ -9,44 +9,56 @@
 </head>
 <body>
 
-<div>
-    <ul id="list-level">
-        <li>
-            <button class="active" data-level="1">
-                LEVEL 1
-            </button>
-        </li>
-        <li>
-            <button data-level="2">
-                LEVEL 2
-            </button>
-        </li>
-        <li>
-            <button data-level="3">
-                LEVEL 3
-            </button>
-        </li>
-        <li>
-            <button data-level="4">
-                LEVEL 4
-            </button>
-        </li>
-        <li>
-            <button data-level="5">
-                LEVEL 5
-            </button>
-        </li>
-        <li>
-            <button data-level="6">
-                LEVEL 6
-            </button>
-        </li>
-    </ul>
+<div class="game-timer__value">
+    <div id="current-time" class="game-timer__current-value"></div>
 </div>
 
-<table id="board" style="margin: 0 auto">
+<div class="container">
+    <div>
+        <ul id="list-level">
+            <li>
+                <button class="hint-button">
+                    GỢI Ý
+                </button>
+            </li>
+            <li>
+                <button class="level-button active" data-level="1">
+                    LEVEL 1
+                </button>
+            </li>
+            <li>
+                <button class="level-button" data-level="2">
+                    LEVEL 2
+                </button>
+            </li>
+            <li>
+                <button class="level-button" data-level="3">
+                    LEVEL 3
+                </button>
+            </li>
+            <li>
+                <button class="level-button" data-level="4">
+                    LEVEL 4
+                </button>
+            </li>
+            <li>
+                <button class="level-button" data-level="5">
+                    LEVEL 5
+                </button>
+            </li>
+            <li>
+                <button class="level-button" data-level="6">
+                    LEVEL 6
+                </button>
+            </li>
+        </ul>
+    </div>
 
-</table>
+    <table id="board" style="margin: 0 auto">
+
+    </table>
+</div>
+
 
 <script src="main.js"></script>
 

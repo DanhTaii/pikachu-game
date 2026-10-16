@@ -9,6 +9,12 @@ const boardElement = document.getElementById("board");
 const board = createEmptyBoard(BOARD_ROWS, BOARD_COLS);
 let firstSelected = null;
 let currentLevel = 2;
+// let currentTotalPokemon = 0;
+
+// CASC BIẾN XỬ LÝ THỜI GIAN
+const TIME_PLAY = 500;
+let remainingTime = 0;
+let timeInterval = null;
 
 initGame();
 
@@ -94,9 +100,12 @@ function initGame() {
     currentLevel = 1;
     fillBoard();
     renderBoard();
+
+    startTime();
 }
 
 function resetGame() {
+    currentTotalPokemon = 0;
     if (stoneTimer !== null) {
         // XÓA BỎ THỜI GIAN ĐANG CHJAY NGẦM
         // KHÔNG THỂ LÀM BẰNG NULL DO CHỈ ĐANG XÓA BIẾN ĐƯỢC GÁN
@@ -128,6 +137,38 @@ function resetGame() {
     if (currentLevel === 3) {
         spawnObstacle(1800, 20)
     }
+    startTime()
+}
+
+// ===================================================================
+// XỬ LÝ THỜI GIAN
+// ===================================================================
+function startTime() {
+    // NẾU NHƯ ĐANG CÓ INTERVAL CHẠY THÌ PHẢI XÓA NSO ĐI
+    if (timeInterval !== null) {
+        clearInterval(timeInterval);
+        timeInterval = null;
+    }
+    // RESET LẠI THỜI GIAN CÒN LẠI ĐỂ ĐẾM
+    remainingTime = TIME_PLAY;
+    updateTimerProgress()
+
+    timeInterval = setInterval(() => {
+        remainingTime--;
+        updateTimerProgress();
+
+
+    }, 1000);
+
+}
+
+function updateTimerProgress() {
+    let timerProgress = document.getElementById('current-time');
+    if (timerProgress === null) {
+        return;
+    }
+
+    timerProgress.style.width = `${remainingTime / TIME_PLAY * 100}%`
 }
 
 // ===================================================================
@@ -394,7 +435,7 @@ function drawPath(r1, c1, r2, c2, pathResult) {
 // ===================================================================
 // CÁC HÀM XWR LÝ LOGIC LEVEL
 // ===================================================================
-const levelButtons = document.querySelectorAll('#list-level button');
+const levelButtons = document.querySelectorAll('#list-level button.level-button');
 levelButtons.forEach(button => {
     button.addEventListener('click', (e) => {
         let currentLevelButton = e.currentTarget

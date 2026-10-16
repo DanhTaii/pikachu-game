@@ -1,325 +1,3 @@
-/** {*/
-/*    box-sizing: border-box;*/
-/*    font-family: 'Arial', Helvetica, sans-serif;*/
-/*}*/
-
-/*span {*/
-/*    color: #CBD5E1;*/
-/*}*/
-
-/*:root {*/
-/*    !*--header-footer-color: #F0F3FF;*!*/
-/*    !*--bg-color: #F9F9FF;*!*/
-/*    !*--box-color: white;*!*/
-/*    !*--btn-bg-color: #E7EEFF;*!*/
-/*    !*--btn-border-color: #c6cff3;*!*/
-/*    !*--bg-shadow-color: rgba(0, 0, 0, 0.2);*!*/
-/*    !*--timer-color: #006782;*!*/
-
-/*    --header-footer-color: #151D2D;*/
-/*    --bg-color: #0B1120;*/
-/*    --box-color: #151D2E;*/
-/*    --btn-bg-color: #151D2E;*/
-/*    --border-line-color: #253349;*/
-/*    --bg-shadow-color: rgba(0, 0, 0, 0.2);*/
-
-/*    --timer-color: #1CB3DD;*/
-/*    --color-yellow: #F8C505;*/
-/*    --color-orange: #FFA000;*/
-/*    --color-green: #059669;*/
-
-/*    --main-text-color: #E6E9ED;*/
-/*    --secondary-text-color: #94A3B8;*/
-/*}*/
-
-/*.text-light {*/
-/*    color: var(--main-text-color);*/
-/*}*/
-
-/*.text-dark-gray {*/
-/*    color: var(--secondary-text-color);*/
-/*}*/
-
-/*.game-box {*/
-/*    padding: 10px !important;*/
-/*    border-radius: 10px;*/
-/*    border: 1px solid var(--border-line-color);*/
-/*    background-color: var(--box-color);*/
-/*    box-shadow: 0 10px 20px var(--bg-shadow-color);*/
-/*}*/
-
-/*!* ------------- BUTTON CHUNG ------- *!*/
-/*.game-btn {*/
-/*    display: flex;*/
-/*    gap: 10px;*/
-/*    padding: 10px;*/
-/*    align-items: center;*/
-/*    width: 100%;*/
-/*    background-color: var(--bg-color);*/
-/*    border-radius: 10px;*/
-/*    border: 1px solid var(--border-line-color);*/
-/*    font-weight: 700;*/
-/*    color: var(--main-text-color);*/
-/*}*/
-
-/*.game-btn:hover {*/
-/*    box-shadow: 0 5px 20px var(--border-line-color);*/
-/*    cursor: pointer;*/
-/*    transform: translateY(-1px) scale(1.01);*/
-/*    color: var(--main-text-color);*/
-/*    background-color: var(--bg-color);*/
-/*}*/
-
-/*.game-btn {*/
-/*    line-height: 17px;*/
-/*}*/
-
-/*.game-btn i {*/
-/*    font-size: 25px;*/
-/*    color: var(--secondary-text-color);*/
-/*}*/
-
-/*.game-btn.active {*/
-/*    color: var(--color-yellow) !important;*/
-/*    background-color: #404037;*/
-/*    border: 1px solid var(--color-yellow);*/
-/*}*/
-
-/*.game-btn.active i {*/
-/*    color: var(--color-yellow) !important;*/
-/*}*/
-
-/*!* ----------- HEADER ----------- *!*/
-/*.game-header {*/
-/*    display: flex;*/
-/*    justify-content: space-between;*/
-/*    align-items: center;*/
-/*    padding: 8px 15px;*/
-/*    border-bottom: 1px solid var(--border-line-color);*/
-/*    background-color: var(--header-footer-color);*/
-/*}*/
-
-/*.utility-items {*/
-/*    display: flex;*/
-/*    height: 30px;*/
-/*    width: 30px;*/
-/*    align-items: center;*/
-/*    background-color: var(--box-color);*/
-/*    color: var(--secondary-text-color);*/
-/*    border: 1px solid var(--border-line-color);*/
-/*    border-radius: 50%;*/
-/*}*/
-
-/*.utility-items i {*/
-/*    !*padding: 10px;*!*/
-/*}*/
-
-/*.game-icon {*/
-/*    height: 50px;*/
-/*    width: 50px;*/
-/*    border-radius: 50%;*/
-/*}*/
-
-/*.game-logo {*/
-/*    display: flex;*/
-/*    align-items: center;*/
-/*}*/
-
-/*.game-utility {*/
-/*    justify-content: left;*/
-/*}*/
-
-/*!* ----------- MAIN ----------- *!*/
-/*.game-main {*/
-/*    background-color: var(--bg-color);*/
-/*    padding: 20px;*/
-/*}*/
-
-/*main section {*/
-/*    margin-bottom: 20px;*/
-/*}*/
-
-/*.game-intro {*/
-/*    background-color: var(--box-color);*/
-/*    box-shadow: 0 10px 20px var(--bg-shadow-color);*/
-/*}*/
-
-/*.game-intro__container {*/
-/*    display: flex;*/
-/*    gap: 10px;*/
-/*}*/
-
-/*.game-info-value {*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    align-items: center;*/
-/*    font-weight: bold;*/
-/*}*/
-
-/*.current-level {*/
-/*    background-color: var(--bg-color);*/
-/*    padding: 10px;*/
-/*    width: 20%;*/
-/*}*/
-
-/*.game-score {*/
-/*    background-color: var(--bg-color);*/
-/*    width: 20%;*/
-/*}*/
-
-/*.game-score i {*/
-/*    color: var(--color-yellow);*/
-/*}*/
-
-/*.game-score .score .score-value {*/
-/*    color: var(--color-yellow);*/
-/*}*/
-
-/*.game-score {*/
-/*    width: 20%;*/
-
-/*}*/
-/*.game-timer {*/
-/*    width: 40%;*/
-/*    background-color: var(--box-color);*/
-/*}*/
-
-/*.game-timer__text i {*/
-/*    color: var(--timer-color);*/
-/*}*/
-
-/*.game-timer__value {*/
-/*    height: 10px;*/
-/*    background-color: var(--bg-color);*/
-/*    box-shadow: inset 0 1px 3px var(--bg-shadow-color);*/
-/*    border-radius: 50px;*/
-/*    border: 2px solid var(--border-line-color);*/
-/*}*/
-
-/*.game-timer__current-value {*/
-/*    background-color: var(--timer-color) !important;*/
-/*}*/
-
-/*.game-body {*/
-/*    height: 600px;*/
-/*}*/
-
-/*.level-content {*/
-/*    height: 100%;*/
-/*}*/
-
-/*.board-content {*/
-/*    height: 100%;*/
-/*}*/
-
-/*!* GAME CONTROLS *!*/
-/*.game-controls .game-btn {*/
-/*    justify-content: center;*/
-/*}*/
-
-/*.suggest-btn i {*/
-/*    color: var(--color-yellow);*/
-/*}*/
-
-/*.shuffle-btn i {*/
-/*    color: var(--timer-color);*/
-/*}*/
-
-/*.pause-btn i {*/
-/*    color: var(--color-orange);*/
-/*}*/
-
-/*!* LEVEL PANEL*!*/
-
-/*.level-title i {*/
-/*    color: var(--color-orange);*/
-/*}*/
-
-/*.separator {*/
-/*    padding: 10px;*/
-/*    border-bottom: 1px solid var(--border-line-color);*/
-/*}*/
-
-/*.level-body ul {*/
-/*    list-style: none;*/
-/*    margin: 0;*/
-/*    padding: 0;*/
-/*}*/
-/*.level-body ul li {*/
-/*    margin: 10px 0;*/
-/*}*/
-
-/*!* BOARD *!*/
-
-/*.board-content {*/
-/*    padding: 10px 100px !important;*/
-/*    width: 942px !important;*/
-/*    height: 600px !important;*/
-/*}*/
-
-/*.board__container {*/
-/*    width: 743px;*/
-/*    height: 534px;*/
-/*}*/
-
-/*.row-list-pieces {*/
-/*    display: flex;*/
-/*}*/
-
-/*.pokemon-piece {*/
-/*    width: 42px;*/
-/*    height: 52px;*/
-
-/*    background-image: url("assets/img/pieces-sprite.png");*/
-/*    !*ngăn ảnh lặp*!*/
-/*    background-repeat: no-repeat;*/
-/*    !*cho các khối nằm liền kề nhau *!*/
-/*    display: inline-block;*/
-/*    border: 2px solid var(--bg-color);*/
-/*    border-radius: 5px;*/
-/*}*/
-
-/*.pokemon-piece:hover {*/
-/*    box-shadow: 0 10px 20px var(--main-text-color);*/
-/*    border: 1px solid var(--main-text-color);*/
-/*    cursor: pointer;*/
-/*}*/
-
-/*.pokemon-piece.selected {*/
-/*    filter: brightness(40%);*/
-/*    pointer-events: none;*/
-/*}*/
-
-/*.pokemon-piece.highlight {*/
-/*    box-shadow: 0 10px 20px var(--color-yellow);*/
-/*    border: 2px solid var(--color-yellow);*/
-/*}*/
-
-/*#pokemon-board {*/
-/*    position: relative;*/
-/*}*/
-
-/*#connection-layer {*/
-/*    position: absolute;*/
-/*    !*top: 0, right: 0, bottom: 0, left: 0*!*/
-/*    inset: 0;*/
-/*    pointer-events: none;*/
-/*}*/
-
-/*.connection-line {*/
-/*    position: absolute;*/
-/*    background-color: var(--color-yellow);*/
-/*    border-radius: 15%;*/
-/*}*/
-
-/*!* ----------- FOOTER ----------- *!*/
-/*.game-footer {*/
-/*    text-align: center;*/
-/*    background-color: var(--header-footer-color);*/
-/*    padding: 20px;*/
-/*    border-top: 1px solid var(--border-line-color);*/
-/*}*/
-
 .dot {
     background-color: green;
 }
@@ -353,11 +31,18 @@
 }
 
 body {
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    justify-items: center;
+    width: 1200px;
+    margin: 0 auto;
+}
+
+.container {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 1200px;
-    margin: 0 auto;
 }
 
 ul {
@@ -366,17 +51,46 @@ ul {
 
 ul li {
     margin: 10px 0;
+    width: 150px;
 }
 
 button {
     font-size: 30px;
+    width: 100%;
+}
+
+.hint-button {
+    background-color: darkblue;
+    color: white;
 }
 
 button:hover {
     cursor: pointer;
 }
 
-button.active {
+.level-button.active {
     background-color: black;
     color: white;
+}
+
+.game-timer__value {
+    margin-top: 50px;
+    position: relative;
+    width: 60%;
+    height: 15px;
+    background-color: #e5e3e3;
+    /*box-shadow: inset 0 1px 3px ;*/
+    border-radius: 50px;
+    border: 2px solid black;
+}
+
+.game-timer__current-value {
+    position: absolute;
+    background-color: #4769d6;
+    width: 100%;
+    border-radius: 50px;
+    height: 15px;
+    top: 0;
+    left: 0;
+    z-index: 100;
 }
