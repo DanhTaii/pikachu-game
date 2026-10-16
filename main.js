@@ -32,6 +32,52 @@ function shuffle(array) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
     }
+    return array;
+}
+
+function shuffleRemaining() {
+    let index = 0;
+    // DANH SÁCH CÁC ID CỦA PIECE HIỆN CÒN TRÊN BÀN CỜ
+    let currentPieceIds = [];
+    // DANH SCASH CÁC VỊ TRÍ CỦA LẦN LƯỢT PIECE Ở MẢNG TRÊN CỦA BÀN CỜ
+    let currentPiecePositions = [];
+
+    // DUYỆT QUA BÀN CỜ
+    for (let i = 0; i < BOARD_ROWS; i++) {
+        for (let j = 0; j < BOARD_COLS; j++) {
+            // LẤY RA VỊ TRÍ HIỆN TẠI
+            let currentPieceId = board[i][j];
+
+            // NẾU NÓ KAHSC NULL THÌ
+            if (currentPieceId !== null && currentPieceId !== -1) {
+                // THÊM ID CỦA NÓ VÀO MẢNG currentPieceIds
+                currentPieceIds[index] = currentPieceId;
+                // THÊM VỊ TRÍ CỦA NÓ VÀO currentPiecePositions
+                currentPiecePositions[index] = {
+                    x: i,
+                    y: j
+                }
+                index++;
+            }
+        }
+    }
+
+    // LẤY MẢNG CÁC ID RA, DÙNG SHUFFLE BAN ĐẦU ĐỂ ĐẢO VỊ TRÍ CÁC ID
+    let shuffleIds = shuffle(currentPieceIds)
+
+    // DUYỆT VÒNG LẶP ĐỂ THÊM LẠI VÀO VỊ TRÍ TRÊN MA TRẬN
+    for (let i = 0; i < currentPiecePositions.length; i++) {
+        // LẤY VỊ TRÍ TẠI I CỦA POSITION
+        let position = currentPiecePositions[i];
+        // LẤY ID MỚI TỪ MẢNG ĐÃ ĐƯỢC SHUFFLE
+        // THÊM NÓ VÀO MA TRẬN
+        board[position.x][position.y] = shuffleIds[i]
+    }
+
+    // ensurePlayableMove();
+
+    // TẢI LẠI GIAO DIỆN VỚI MA TRẬN MỚI
+    renderBoard()
 }
 
 function fillBoard() {
@@ -43,12 +89,12 @@ function fillBoard() {
         }
     }
 
-    shuffle(pokemonPool);
+    const newPokemonPool = shuffle(pokemonPool);
 
     let index = 0;
     for (let row = 1; row < BOARD_ROWS - 1; row++) {
         for (let col = 1; col < BOARD_COLS - 1; col++) {
-            board[row][col] = pokemonPool[index++];
+            board[row][col] = newPokemonPool[index++];
         }
     }
 }
@@ -101,6 +147,7 @@ function initGame() {
 
     currentLevel = 1;
     fillBoard();
+    // ensurePlayableMove();
     renderBoard();
 
     startTime();
@@ -134,6 +181,7 @@ function resetGame() {
     }
 
     fillBoard();
+    ensurePlayableMove();
     renderBoard();
 
     if (currentLevel === 3) {
@@ -179,7 +227,7 @@ function updateTimerProgress() {
 function handleCellClick(row, col) {
     const currentPieceId = board[row][col];
 
-    if (currentPieceId == null) {
+    if (currentPieceId == null || currentPieceId === -1) {
         return;
     }
 
@@ -224,6 +272,9 @@ function handleCellClick(row, col) {
             // => lúc đó đã biến mất thằng firstSelected
             setTimeout(() => {
                 applyLevelMechanic(r1, c1, r2, c2);
+                if (isStillHaveConnection() === null) {
+                    shuffleRemaining();
+                }
             }, 200);
 
         } else {
@@ -334,7 +385,7 @@ function isStillHaveConnection() {
         for (let j = 0; j < BOARD_COLS; j++) {
             let pieceId = board[i][j];
             //NẾU PIECE KHÁC NULL
-            if (pieceId !== null) {
+            if (pieceId !== null && pieceId !== -1) {
                 // NẾU CHƯA CÓ MẢNG CHO ID HIỆN TỊA
                 if (!groups[pieceId]) {
                     // TẠO MẢNG MỚI
@@ -493,7 +544,7 @@ hintButton.addEventListener('click', (e) => {
 })
 
 function highlightHint(row1, col1, row2, col2) {
-    let divPieceOne =boardElement.rows[row1].cells[col1]
+    let divPieceOne = boardElement.rows[row1].cells[col1]
     let divPieceTwo = boardElement.rows[row2].cells[col2]
 
     divPieceOne.classList.add('highlight');
@@ -608,6 +659,7 @@ function spawnObstacle(time, numberOfStones) {
         hiddenPieces.push(hiddenPiece)
     }
 
+    // ensurePlayableMove();
     renderBoard()
 
     stoneTimer = setTimeout(() => {
