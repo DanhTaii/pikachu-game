@@ -9,7 +9,7 @@ const boardElement = document.getElementById("board");
 const board = createEmptyBoard(BOARD_ROWS, BOARD_COLS);
 let firstSelected = null;
 let currentLevel = 2;
-// let currentTotalPokemon = 0;
+let currentTotalPokemon = 0;
 
 // CASC BIẾN XỬ LÝ THỜI GIAN
 const TIME_PLAY = 500;
@@ -94,9 +94,11 @@ function fillBoard() {
     let index = 0;
     for (let row = 1; row < BOARD_ROWS - 1; row++) {
         for (let col = 1; col < BOARD_COLS - 1; col++) {
+            currentTotalPokemon++
             board[row][col] = newPokemonPool[index++];
         }
     }
+    console.log("SỐ LƯỢNG POKEMON: " + currentTotalPokemon);
 }
 
 function renderBoard() {
@@ -154,7 +156,11 @@ function initGame() {
 }
 
 function resetGame() {
-    // currentTotalPokemon = 0;
+    currentTotalPokemon = 0;
+    isFlipPieceOver = false;
+    boardElement.querySelectorAll(".cell").forEach(cell => {
+        cell.classList.remove("active", "hidden");
+    });
     if (stoneTimer !== null) {
         // XÓA BỎ THỜI GIAN ĐANG CHJAY NGẦM
         // KHÔNG THỂ LÀM BẰNG NULL DO CHỈ ĐANG XÓA BIẾN ĐƯỢC GÁN
@@ -234,6 +240,11 @@ function handleCellClick(row, col) {
     // LẤY RA Ô TD TRÊN TABLE CỦA CURRENT PIECE
     const currentPieceElement = boardElement.rows[row].cells[col];
 
+    // LEVEL 5: chỉ hiện thẻ vừa bấm.
+    if (currentLevel === 5 && isFlipPieceOver) {
+        currentPieceElement.classList.remove("hidden");
+    }
+
     // NẾU NHƯ CHƯA CHỌN PIECE NÀO THÌ GÁN CHO FIRST PIECE
     if (!firstSelected) {
         firstSelected = {row: row, col: col, id: currentPieceId};
@@ -252,6 +263,9 @@ function handleCellClick(row, col) {
             // XÓA TRÊN MẢNG HIỆN TẠI
             board[firstSelected.row][firstSelected.col] = null;
             board[row][col] = null;
+
+            currentTotalPokemon -= 2;
+            console.log(currentTotalPokemon);
 
             // XÓA TRÊN UI
             firstPieceElement.style.backgroundImage = "none";
@@ -279,12 +293,18 @@ function handleCellClick(row, col) {
 
         } else {
             // TRƯỜNG HỢP KHÁC NHAU THÌ ĐỔI SANG Ô MỚI CLICK
+            if (currentLevel === 5 && isFlipPieceOver) {
+                firstPieceElement.classList.add("hidden");
+            }
             firstPieceElement.classList.remove("active");
             firstSelected = {row, col, id: currentPieceId};
             currentPieceElement.classList.add("active");
         }
     } else {
         // TRƯỜNG HỢP KHÁC NHAU THÌ ĐỔI SANG Ô MỚI CLICK
+        if (currentLevel === 5 && isFlipPieceOver) {
+            firstPieceElement.classList.add("hidden");
+        }
         firstPieceElement.classList.remove("active");
         firstSelected = {row, col, id: currentPieceId};
         currentPieceElement.classList.add("active");
@@ -396,6 +416,7 @@ function isStillHaveConnection() {
             }
         }
     }
+    // console.log(groups)
 
     for (let index in groups) {
         // DANH SÁCH CÁC PIECE DỰA TRÊN INDEX
@@ -585,6 +606,9 @@ function applyLevelMechanic(r1, c1, r2, c2) {
         case 4:
             flipBoardHorizontal();
             break;
+        case 5:
+            flipPieceOver();
+            break;
         default:
             renderBoard();
     }
@@ -713,4 +737,44 @@ function flipBoardHorizontal() {
     }
 
     renderBoard();
+}
+
+// ==========================================
+// LEVEL 5: LẬT ÚP
+// ==========================================
+let isFlipPieceOver = false;
+
+function flipPieceOver() {
+    if (currentTotalPokemon === (144 / 2) && !isFlipPieceOver) {
+
+        // TẠO RA 1 ĐỐI TƯỢNG CHỨA CÁC MẢNG
+        let groupPokemon = {}
+
+        // DUYỆT QUA BẢNG HIỆN TẠI
+        for (let i = 1; i <= BOARD_ROWS - 2; i++) {
+            for (let j = 1; j <= BOARD_COLS - 2; j++) {
+                //LẤY RA ID
+                let currentId = board[i][j];
+                if (currentId !== null && currentId !== -1) {
+                    // NEEUS NHƯ TRONG OBJECT groupPokemon CHƯA CÓ SỐ ID HIỆN TẠI
+                    // THÌ SẼ TẠO NÓ VỚI CÁI SỐ ID 1 MẢNG MỚI
+                    if (!groupPokemon[currentId]) {
+                        groupPokemon[currentId] = []
+                    }
+                    // THÊM ROW, COL, ID ĐÚNG CÁI MẢNG CỦA ID
+                    groupPokemon[currentId].push({row: i, col: j, id: currentId})
+                }
+            }
+        }
+
+        for (let index in groupPokemon) {
+            let currentListIds = groupPokemon[index];
+            let halfCurrentListIds = currentListIds.splice(0, currentListIds.length / 2)
+
+            halfCurrentListIds.forEach(currentPieceId => {
+                boardElement.rows[currentPieceId.row].cells[currentPieceId.col].classList.add("hidden");
+            });
+        }
+        isFlipPieceOver = true;
+    }
 }
