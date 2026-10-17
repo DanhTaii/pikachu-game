@@ -10,6 +10,7 @@ const board = createEmptyBoard(BOARD_ROWS, BOARD_COLS);
 let firstSelected = null;
 let currentLevel = 2;
 let currentTotalPokemon = 0;
+let levelMechanicTimeOut = null;
 
 // CASC BIẾN XỬ LÝ THỜI GIAN
 const TIME_PLAY = 500;
@@ -74,10 +75,61 @@ function shuffleRemaining() {
         board[position.x][position.y] = shuffleIds[i]
     }
 
-    // ensurePlayableMove();
-
+    ensurePlayableMove();
     // TẢI LẠI GIAO DIỆN VỚI MA TRẬN MỚI
     renderBoard()
+}
+
+function ensurePlayableMove() {
+    //KIỂM TRA LẦN ĐẦU NẾU NHƯ ĐÃ CÓ NƯỚC ĐI HỢP LÝ
+    if (isStillHaveConnection()) {
+        return;
+    }
+
+    let availablePieces = [];
+    for (let i = 1; i <= BOARD_ROWS - 2; i++) {
+        for (let j = 1; j <= BOARD_COLS - 2; j++) {
+            if (board[i][j] !== null && board[i][j] !== -1) {
+                availablePieces.push({row: i, col: j, id: board[i][j]});
+            }
+        }
+    }
+
+    for (let i = 0; i < availablePieces.length; i++) {
+        // LẤY RA PIECE ĐẦU TIÊN
+        let firstPiece = availablePieces[i];
+        // LẤY RA PIECE THỨ HAI CÓ CÙNG ID
+        // NHƯNG PHẢI ĐẢM BẢO PIECE THỨ 2 NÀY KHÔNG PHẢI PIECE 1
+        let secondPiece = availablePieces.find(
+            p => p.id === firstPiece.id &&
+                (p.row !== firstPiece.row || p.col !== firstPiece.col)
+        );
+
+        // xử lý nếu như chỉ còn 1 quân lẻ trên bàn cờ (CHẲNG LẼ VẬY THẬT ?)
+        if (!secondPiece) {
+            continue;
+        }
+
+        let isSwapped = false;
+        for (let j = 0; j < availablePieces.length; j++) {
+            let target = availablePieces[j];
+            if (target.row === firstPiece.row && target.col === firstPiece.col) continue;
+            if (target.row === secondPiece.row && target.col === secondPiece.col) continue;
+
+            // NẾU NHƯ TỪ FIRST PIECE ĐẾN TARGET PIECE CÓ ĐƯỜNG ĐI
+            if (checkConnection(firstPiece.row, firstPiece.col, target.row, target.col)) {
+                let temp = target;
+                board[target.row][target.col] = secondPiece.id;
+                board[secondPiece.row][secondPiece.col] = temp.id;
+                isSwapped = true;
+                break;
+            }
+        }
+        // NẾU ĐÃ TRÁO RỒI THÌ DỪNG
+        if (isSwapped) {
+            return;
+        }
+    }
 }
 
 function fillBoard() {
@@ -149,7 +201,7 @@ function initGame() {
 
     currentLevel = 1;
     fillBoard();
-    // ensurePlayableMove();
+    ensurePlayableMove();
     renderBoard();
 
     startTime();
@@ -158,6 +210,11 @@ function initGame() {
 function resetGame() {
     currentTotalPokemon = 0;
     isFlipPieceOver = false;
+    isFlipBoard = false;
+    if (levelMechanicTimeOut !== null) {
+        clearTimeout(levelMechanicTimeOut);
+        levelMechanicTimeOut = null;
+    }
     boardElement.querySelectorAll(".cell").forEach(cell => {
         cell.classList.remove("active", "hidden");
     });
@@ -187,7 +244,7 @@ function resetGame() {
     }
 
     fillBoard();
-    // ensurePlayableMove();
+    ensurePlayableMove();
     renderBoard();
 
     if (currentLevel === 3) {
@@ -213,6 +270,11 @@ function startTime() {
         remainingTime--;
         updateTimerProgress();
 
+        if (remainingTime === 0 && currentTotalPokemon > 0) {
+            alert("BẠN ĐÃ THUA CUỘC !");
+            resetGame();
+            return;
+        }
 
     }, 1000);
 
@@ -258,6 +320,11 @@ function handleCellClick(row, col) {
     if (currentPieceId === firstSelected.id) {
         let path = checkConnection(row, col, firstSelected.row, firstSelected.col);
 
+        // Nếu khác ID thì loại
+        if (board[row][col] !== board[firstSelected.row][firstSelected.col]) {
+            return;
+        }
+
         if (path !== null) {
             drawPath(row, col, firstSelected.row, firstSelected.col, path);
             // XÓA TRÊN MẢNG HIỆN TẠI
@@ -265,8 +332,20 @@ function handleCellClick(row, col) {
             board[row][col] = null;
 
             currentTotalPokemon -= 2;
-            console.log(currentTotalPokemon);
+            // console.log(currentTotalPokemon);
 
+            if (currentTotalPokemon === 0) {
+                if (currentLevel === 6) {
+                    alert("CHÚC MỪNG BẠN ĐÃ PHÁ ĐẢO GAME");
+                    currentLevel = 1;
+                } else {
+                    alert("CHÚC MỪNG BẠN ĐÃ VƯỢT ẢI !!");
+                    currentLevel++;
+                }
+
+                resetGame();
+                return;
+            }
             // XÓA TRÊN UI
             firstPieceElement.style.backgroundImage = "none";
             currentPieceElement.style.backgroundImage = "none";
@@ -284,7 +363,7 @@ function handleCellClick(row, col) {
             // PHẢI THỰC HIỆN GÁN BIẾN LẦN LƯỢT
             // DO setTimeout sẽ đợi cho hàm chạy hết sau 200ms nó mới chạy
             // => lúc đó đã biến mất thằng firstSelected
-            setTimeout(() => {
+            levelMechanicTimeOut = setTimeout(() => {
                 applyLevelMechanic(r1, c1, r2, c2);
                 if (isStillHaveConnection() === null) {
                     shuffleRemaining();
@@ -446,11 +525,6 @@ function isStillHaveConnection() {
 }
 
 function checkConnection(r1, c1, r2, c2) {
-    // Nếu khác ID thì loại
-    if (board[r1][c1] !== board[r2][c2]) {
-        return null;
-    }
-
     if (canConnectStraight(r1, c1, r2, c2)) {
         return {type: 'straight'};
     }
@@ -689,7 +763,6 @@ function spawnObstacle(time, numberOfStones) {
         hiddenPieces.push(hiddenPiece)
     }
 
-    // ensurePlayableMove();
     renderBoard()
 
     stoneTimer = setTimeout(() => {
@@ -701,9 +774,13 @@ function spawnObstacle(time, numberOfStones) {
 // ==========================================
 // LEVEL 4: BÀN CỜ BỊ LẬT
 // ==========================================
-let isFlipHorizontal = true;
+let isFlipBoard = false;
 
 function flipBoardHorizontal() {
+    if (!isFlipBoard) {
+        return;
+    }
+    let isFlipHorizontal = true;
     if (isFlipHorizontal) {
         // console.log("LẬP NGANG")
         // CHẠY HẾT CÁC ROWS DO HIỆN TẠI LÀ LẬT NGANG
