@@ -181,7 +181,7 @@ function resetGame() {
     }
 
     fillBoard();
-    ensurePlayableMove();
+    // ensurePlayableMove();
     renderBoard();
 
     if (currentLevel === 3) {
@@ -582,6 +582,9 @@ function applyLevelMechanic(r1, c1, r2, c2) {
         case 3:
             renderBoard();
             break;
+        case 4:
+            flipBoardHorizontal();
+            break;
         default:
             renderBoard();
     }
@@ -623,6 +626,9 @@ function applyGravity(r1, c1, r2, c2) {
     renderBoard()
 }
 
+// ==========================================
+// LEVEL 3: VẬT CẢN DI CHUYỂN
+// ==========================================
 let hiddenPieces = []
 let stoneTimer = null;
 
@@ -666,4 +672,45 @@ function spawnObstacle(time, numberOfStones) {
         spawnObstacle(time, numberOfStones)
     }, time);
 
+}
+
+// ==========================================
+// LEVEL 4: BÀN CỜ BỊ LẬT
+// ==========================================
+let isFlipHorizontal = true;
+
+function flipBoardHorizontal() {
+    if (isFlipHorizontal) {
+        // console.log("LẬP NGANG")
+        // CHẠY HẾT CÁC ROWS DO HIỆN TẠI LÀ LẬT NGANG
+        for (let i = 1; i < BOARD_ROWS; i++) {
+            // CHIR CHJAY 1 NỬA CỘT
+            for (let j = 1; j <= Math.floor((BOARD_COLS - 2) / 2); j++) {
+                // LẤY VỊ TRÍ CỘT ĐỐI DIỆN VỚI CỘT HIỆN TẠI
+                let oppositeCol = BOARD_COLS - 1 - j;
+
+                // TẠO BIẾN TẠM CHO VỊ TRÍ HIỆN TẠI
+                let temp = board[i][j];
+                // GÁN VỊ TRÍ HIỆN TẠI THÀNH VỊ TRÍ ĐỐI DIỆN NGANG
+                board[i][j] = board[i][oppositeCol];
+                // LẤY VỊ TRÍ ĐỐI DIỆN NGANG GÁN THÀNH BIẾN TẠM Ở TRÊN
+                board[i][oppositeCol] = temp;
+            }
+        }
+        isFlipHorizontal = false;
+    } else {
+        // console.log("LẬP DỌC")
+        for (let i = 1; i <= Math.floor((BOARD_ROWS - 2) / 2); i++) {
+            for (let j = 1; j < BOARD_COLS; j++) {
+                let oppositeRow = BOARD_ROWS - 1 - i;
+
+                let temp = board[i][j];
+                board[i][j] = board[oppositeRow][j];
+                board[oppositeRow][j] = temp;
+            }
+        }
+        isFlipHorizontal = true;
+    }
+
+    renderBoard();
 }
