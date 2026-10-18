@@ -13,9 +13,25 @@ let currentTotalPokemon = 0;
 let levelMechanicTimeOut = null;
 
 // CASC BIẾN XỬ LÝ THỜI GIAN
-const TIME_PLAY = 500;
+const TIME_PLAY = 600;
 let remainingTime = 0;
 let timeInterval = null;
+
+let levelRule = [
+    "Giống luật chung",
+
+    "Mỗi lần nối thành công 2 pokemon bàn cờ sẽ bị hút xuống dưới",
+
+    "Vật cản sẽ xuất hiện ngẫu nhiên liên tục trên bàn cờ và bạn không thể ăn xuyên vật cản hay phá vật cản",
+
+    "Mỗi lần nối thành công 2 pokemon bàn cờ sẽ bị lật từ trái sang phải, " +
+    "lần nối thành công tiếp theo sẽ lật sang từ trên xuống và quay lại lần lật đầu tiên rồi cứ thế tiếp tục",
+
+    "Khi trên bàn cờ chỉ còn 1 nửa quân , tức là chỉ còn 72 quân cờ. Bàn cờ sẽ che mờ đi 1 nửa của 72 quân hiện tại. " +
+    "Người chơi có thể di chuyển chuột đến 1 quân đó để xem rõ đó là quân gì",
+
+    "Người chơi phải nối 2 pokemon theo dạng chỉ định của hệ thống. Gồm có 3 loại đó là: 0 góc, 1 góc, 2 góc"
+]
 
 initGame();
 
@@ -164,7 +180,7 @@ function renderBoard() {
 
             if (pokemonId === null) {
                 cell.style.backgroundImage = "none";
-                cell.style.border = "none";
+                cell.style.border = "2px solid transparent";
             } else if (pokemonId === -1) {
                 // console.log(pokemonId)
                 cell.style.backgroundColor = "black";
@@ -200,6 +216,7 @@ function initGame() {
     }
 
     currentLevel = 1;
+    updateButtonLevelUI(currentLevel)
     fillBoard();
     ensurePlayableMove();
     renderBoard();
@@ -245,6 +262,7 @@ function resetGame() {
 
     fillBoard();
     ensurePlayableMove();
+    updateButtonLevelUI(currentLevel)
     renderBoard();
 
     if (currentLevel === 3) {
@@ -659,11 +677,25 @@ levelButtons.forEach(button => {
     button.addEventListener('click', (e) => {
         let currentLevelButton = e.currentTarget
         currentLevel = parseInt(currentLevelButton.getAttribute('data-level'))
-        levelButtons.forEach(btn => btn.classList.remove('active'));
-        currentLevelButton.classList.add('active');
         resetGame();
     })
 })
+
+function updateButtonLevelUI(dataLevel) {
+    document.querySelectorAll('#list-level button.level-button').forEach(button => {
+        button.classList.remove('active')
+    })
+    let currentLevelButton = document.querySelector(`#list-level button.level-button[data-level="${dataLevel}"]`);
+    if (currentLevelButton) {
+        currentLevelButton.classList.add('active');
+    }
+
+    let currentLevelRule = levelRule[dataLevel - 1];
+    let currentLevelRuleUI = document.getElementById('level-rule__content')
+    if (currentLevelRuleUI) {
+        currentLevelRuleUI.innerText = currentLevelRule;
+    }
+}
 
 // ÁP DỤNG LEVEL KHI THỰC THI CELL-CLICK
 function applyLevelMechanic(r1, c1, r2, c2) {
@@ -777,7 +809,7 @@ function spawnObstacle(time, numberOfStones) {
 let isFlipBoard = false;
 
 function flipBoardHorizontal() {
-    if (!isFlipBoard) {
+    if (isFlipBoard) {
         return;
     }
     let isFlipHorizontal = true;
