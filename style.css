@@ -46,8 +46,9 @@
 }
 
 .cell.highlight {
-    box-shadow: 0 5px 15px #214ee5;
-    border: 2px solid #214ee5 !important;
+    background-color: #fffb00 !important;
+    border: 2px solid #ff0000 !important;
+    box-shadow: 0 0 10px #ff0000;
 }
 
 body {

@@ -166,7 +166,7 @@ function fillBoard() {
             board[row][col] = newPokemonPool[index++];
         }
     }
-    console.log("SỐ LƯỢNG POKEMON: " + currentTotalPokemon);
+    // console.log("SỐ LƯỢNG POKEMON: " + currentTotalPokemon);
 }
 
 function renderBoard() {
@@ -228,6 +228,7 @@ function resetGame() {
     currentTotalPokemon = 0;
     isFlipPieceOver = false;
     isFlipBoard = false;
+    ruleElement.style.display = 'none'
     if (levelMechanicTimeOut !== null) {
         clearTimeout(levelMechanicTimeOut);
         levelMechanicTimeOut = null;
@@ -267,6 +268,9 @@ function resetGame() {
 
     if (currentLevel === 3) {
         spawnObstacle(1800, 20)
+    }
+    if (currentLevel === 6) {
+        assignNewTarget();
     }
     startTime()
 }
@@ -337,6 +341,26 @@ function handleCellClick(row, col) {
 
     if (currentPieceId === firstSelected.id) {
         let path = checkConnection(row, col, firstSelected.row, firstSelected.col);
+        if (path === null) {
+            firstPieceElement.classList.remove("active");
+            firstSelected = {row, col, id: currentPieceId};
+            currentPieceElement.classList.add("active");
+            return;
+        }
+
+        if (currentLevel === 6) {
+            // console.log("LOẠI BÊN ASSIGNMENT: "+currentTargetType);
+            // console.log("LOẠI BÊN KIỂM TRA ĐƯỜNG: "+currentTargetType);
+            if (currentTargetType !== path.type) {
+                // console.log("Sai mục tiêu! Không được nối cặp này.");
+                // console.log("LOẠI BÊN ASSIGNMENT: "+currentTargetType);
+                // console.log("LOẠI BÊN KIỂM TRA ĐƯỜNG: "+currentTargetType);
+                firstPieceElement.classList.remove("active");
+                firstSelected = {row, col, id: currentPieceId};
+                currentPieceElement.classList.add("active");
+                return;
+            }
+        }
 
         // Nếu khác ID thì loại
         if (board[row][col] !== board[firstSelected.row][firstSelected.col]) {
@@ -382,9 +406,16 @@ function handleCellClick(row, col) {
             // DO setTimeout sẽ đợi cho hàm chạy hết sau 200ms nó mới chạy
             // => lúc đó đã biến mất thằng firstSelected
             levelMechanicTimeOut = setTimeout(() => {
-                applyLevelMechanic(r1, c1, r2, c2);
-                if (isStillHaveConnection() === null) {
-                    shuffleRemaining();
+                if (currentLevel === 6) {
+                    if (isStillHaveConnection() === null) {
+                        shuffleRemaining();
+                    }
+                    applyLevelMechanic(r1, c1, r2, c2); // gán mục tiêu sau khi xáo
+                } else {
+                    applyLevelMechanic(r1, c1, r2, c2);
+                    if (isStillHaveConnection() === null) {
+                        shuffleRemaining();
+                    }
                 }
             }, 200);
 
@@ -666,7 +697,7 @@ function highlightHint(row1, col1, row2, col2) {
     setTimeout(() => {
         divPieceOne.classList.remove('highlight');
         divPieceTwo.classList.remove('highlight');
-    }, 600)
+    }, 800)
 }
 
 // ===================================================================
@@ -714,6 +745,9 @@ function applyLevelMechanic(r1, c1, r2, c2) {
             break;
         case 5:
             flipPieceOver();
+            break;
+        case 6:
+            assignNewTarget();
             break;
         default:
             renderBoard();
@@ -812,8 +846,8 @@ function flipBoardHorizontal() {
     if (isFlipBoard) {
         return;
     }
-    let isFlipHorizontal = true;
-    if (isFlipHorizontal) {
+    let isFlipHorizontal = false;
+    if (!isFlipHorizontal) {
         // console.log("LẬP NGANG")
         // CHẠY HẾT CÁC ROWS DO HIỆN TẠI LÀ LẬT NGANG
         for (let i = 1; i < BOARD_ROWS; i++) {
@@ -830,7 +864,7 @@ function flipBoardHorizontal() {
                 board[i][oppositeCol] = temp;
             }
         }
-        isFlipHorizontal = false;
+        isFlipHorizontal = true;
     } else {
         // console.log("LẬP DỌC")
         for (let i = 1; i <= Math.floor((BOARD_ROWS - 2) / 2); i++) {
@@ -842,7 +876,7 @@ function flipBoardHorizontal() {
                 board[oppositeRow][j] = temp;
             }
         }
-        isFlipHorizontal = true;
+        isFlipHorizontal = false;
     }
 
     renderBoard();
@@ -886,4 +920,39 @@ function flipPieceOver() {
         }
         isFlipPieceOver = true;
     }
+}
+
+// ==========================================
+// LEVEL 6: TÌM CẶP THEO DẠNG ĐƯỜNG CHỈ ĐỊNH
+// ==========================================
+let currentTargetType = null;
+let ruleElement = document.getElementById("level-rule__target");
+
+function assignNewTarget() {
+    let findCouple = isStillHaveConnection();
+    let pieceOne = findCouple.pieceOne;
+    let pieceTwo = findCouple.pieceTwo;
+
+    if (!findCouple) {
+        return;
+    }
+
+    let typeConnection = checkConnection(pieceOne.row, pieceOne.col, pieceTwo.row, pieceTwo.col).type;
+    ruleElement.style.display = 'block';
+    ruleElement.innerHTML = `Mục tiêu là tìm 1 cặp: <div id="target-type"></div>`;
+    let targetType = document.getElementById('target-type');
+
+    if (typeConnection === "straight") {
+        targetType.innerText = 'NỐI THẲNG (0 GÓC)';
+        currentTargetType = typeConnection;
+    } else if (typeConnection === "one_corner") {
+        targetType.innerText = 'NỐI MỘT GÓC';
+        currentTargetType = typeConnection;
+    } else {
+        targetType.innerText = 'NỐI HAI GÓC';
+        currentTargetType = typeConnection;
+    }
+
+    targetType.style.fontWeight = '700';
+    targetType.style.textDecoration = 'underline';
 }
