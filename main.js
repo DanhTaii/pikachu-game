@@ -227,7 +227,6 @@ function initGame() {
 function resetGame() {
     currentTotalPokemon = 0;
     isFlipPieceOver = false;
-    isFlipBoard = false;
     ruleElement.style.display = 'none'
     if (levelMechanicTimeOut !== null) {
         clearTimeout(levelMechanicTimeOut);
@@ -840,13 +839,9 @@ function spawnObstacle(time, numberOfStones) {
 // ==========================================
 // LEVEL 4: BÀN CỜ BỊ LẬT
 // ==========================================
-let isFlipBoard = false;
+let isFlipHorizontal = false;
 
 function flipBoardHorizontal() {
-    if (isFlipBoard) {
-        return;
-    }
-    let isFlipHorizontal = false;
     if (!isFlipHorizontal) {
         // console.log("LẬP NGANG")
         // CHẠY HẾT CÁC ROWS DO HIỆN TẠI LÀ LẬT NGANG
@@ -864,7 +859,6 @@ function flipBoardHorizontal() {
                 board[i][oppositeCol] = temp;
             }
         }
-        isFlipHorizontal = true;
     } else {
         // console.log("LẬP DỌC")
         for (let i = 1; i <= Math.floor((BOARD_ROWS - 2) / 2); i++) {
@@ -876,9 +870,9 @@ function flipBoardHorizontal() {
                 board[oppositeRow][j] = temp;
             }
         }
-        isFlipHorizontal = false;
     }
 
+    isFlipHorizontal = !isFlipHorizontal;
     renderBoard();
 }
 
