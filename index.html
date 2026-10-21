@@ -4,8 +4,154 @@
     <meta charset="UTF-8">
     <title>Classic Pikachu Game</title>
 
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            /*box-sizing: border-box;*/
+            font-family: 'Arial', Helvetica, sans-serif;
+        }
 
+        .dot {
+            background-color: green;
+        }
+
+        .cell {
+            width: 42px;
+            height: 52px;
+            border: 2px solid black;
+
+            border-radius: 5px;
+        }
+
+        .cell:hover {
+            cursor: pointer;
+        }
+
+        .cell.empty {
+            border: none !important;
+            background-image: none;
+        }
+
+        .cell.active {
+            filter: brightness(60%);
+            pointer-events: none;
+        }
+
+        .cell.stone {
+            background-color: black;
+            color: white;
+            text-align: center;
+        }
+
+        .cell.hidden {
+            filter: brightness(14%);
+            cursor: pointer;
+        }
+
+        .cell.hidden:hover {
+            filter: brightness(100%);
+            cursor: pointer;
+        }
+
+        .cell.highlight {
+            background-color: #fffb00 !important;
+            border: 2px solid #ff0000 !important;
+            box-shadow: 0 0 10px #ff0000;
+        }
+
+        body {
+            /*display: flex;*/
+            /*justify-content: center;*/
+            /*align-items: center;*/
+            justify-items: center;
+            width: 1200px;
+            margin: 0 auto;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            /*align-items: center;*/
+        }
+
+        .list-level__container {
+            margin-top: 47px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            margin: 10px 0;
+            width: 100px;
+        }
+
+        button {
+            font-size: 20px;
+            width: 100%;
+        }
+
+        .hint-button {
+            background-color: darkblue;
+            color: white;
+        }
+
+        button:hover {
+            cursor: pointer;
+        }
+
+        .level-button.active {
+            background-color: black;
+            color: white;
+        }
+
+        .game-timer__value {
+            margin-top: 50px;
+            position: relative;
+            width: 60%;
+            height: 15px;
+            background-color: #e5e3e3;
+            /*box-shadow: inset 0 1px 3px ;*/
+            border-radius: 50px;
+            border: 2px solid black;
+        }
+
+        .game-timer__current-value {
+            position: absolute;
+            background-color: #4769d6;
+            width: 100%;
+            border-radius: 50px;
+            height: 15px;
+            top: 0;
+            left: 0;
+            z-index: 100;
+        }
+
+        .guideline {
+            border: 1px solid black;
+            background-color: #e9e6e6;
+            padding: 10px;
+            margin-top: 60px;
+            /*min-height: 50px;*/
+            height: 515px;
+            border-radius: 2px;
+            width: 200px;
+        }
+
+        .guideline .rule-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .guideline .rule-subtitle {
+            font-weight: 600;
+        }
+
+        .level-rule__section .rule-content {
+            margin: 12px 0;
+        }
+    </style>
 </head>
 <body>
 
@@ -62,14 +208,14 @@
         <span class="rule-title">HƯỚNG DẪN</span>
         <hr>
         <div id="level-rule__base" class="level-rule__base level-rule__section">
-            <div class="rule-subtitle">LUẬT CHUNG: </div>
+            <div class="rule-subtitle">LUẬT CHUNG:</div>
             <div class="rule-content">Chọn 2 pokemon giống nhau để nối</div>
             <div class="rule-content">Chỉ được nối tối đa là 2 góc</div>
             <div class="rule-content">Nối hết trong thời gian quy định thì thắng, còn không thì sẽ thua</div>
         </div>
         <hr>
         <div id="level-rule__current" class="level-rule__current level-rule__section">
-            <div class="rule-subtitle">LUẬT LEVEL HIỆN TẠI: </div>
+            <div class="rule-subtitle">LUẬT LEVEL HIỆN TẠI:</div>
             <div id="level-rule__content" class="rule-content"></div>
             <div id="level-rule__target" class="rule-content"></div>
         </div>

@@ -266,7 +266,7 @@ function resetGame() {
     renderBoard();
 
     if (currentLevel === 3) {
-        spawnObstacle(1800, 20)
+        spawnObstacle(5000, 10)
     }
     if (currentLevel === 6) {
         assignNewTarget();
@@ -617,9 +617,9 @@ function drawLine(x1, y1, x2, y2) {
 
     // Đặt style cơ bản cho đường chớp
     line.style.position = "absolute";
-    line.style.backgroundColor = "var(--color-yellow, #F8C505)"; // Dùng màu vàng của bạn
-    line.style.pointerEvents = "none"; // Không cản trở click
-    line.style.zIndex = "9999"; // Hiển thị trên cùng
+    line.style.backgroundColor = "var(--color-yellow, #F8C505)";
+    line.style.pointerEvents = "none";
+    line.style.zIndex = "9999";
 
     if (x1 === x2) {
         // VẼ ĐƯỜNG THẲNG DỌC
@@ -810,9 +810,9 @@ function spawnObstacle(time, numberOfStones) {
     let availablePieces = [];
     for (let i = 0; i < BOARD_ROWS; i++) {
         for (let j = 0; j < BOARD_COLS; j++) {
-            if (board[i][j] !== null) {
+            // if (board[i][j] !== null) {
                 availablePieces.push({r: i, c: j, id: board[i][j]})
-            }
+            // }
         }
     }
 
