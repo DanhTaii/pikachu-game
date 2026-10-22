@@ -30,7 +30,10 @@ let levelRule = [
     "Khi trên bàn cờ chỉ còn 1 nửa quân , tức là chỉ còn 72 quân cờ. Bàn cờ sẽ che mờ đi 1 nửa của 72 quân hiện tại. " +
     "Người chơi có thể di chuyển chuột đến 1 quân đó để xem rõ đó là quân gì",
 
-    "Người chơi phải nối 2 pokemon theo dạng chỉ định của hệ thống. Gồm có 3 loại đó là: 0 góc, 1 góc, 2 góc"
+    "Người chơi phải nối 2 pokemon theo dạng chỉ định của hệ thống. Gồm có 3 loại đó là: 0 góc, 1 góc, 2 góc",
+
+    "Mỗi lần nối thành công 2 quân thì bàn cờ sẽ di chuyển theo quy tắc. Hàng chẵn thì từng quân sẽ dịch chuyển từ trái sang phải 1 ô. " +
+    "Hàng lẻ thì sẽ dịch chuyển từ phải qua trái 1 ô"
 ]
 
 initGame();
@@ -213,6 +216,17 @@ function initGame() {
         }
 
         boardElement.appendChild(rowElement);
+    }
+
+    for (let level = 0; level < levelRule.length; level++) {
+        const ulLevel = document.getElementById("list-level");
+        const liLevel = document.createElement("li");
+        const btnLevel = document.createElement("button");
+        btnLevel.classList.add("level-button");
+        btnLevel.setAttribute("data-level", `${level + 1}`);
+        btnLevel.textContent = `LEVEL ${level + 1}`
+        liLevel.append(btnLevel);
+        ulLevel.appendChild(liLevel);
     }
 
     currentLevel = 1;
@@ -748,6 +762,9 @@ function applyLevelMechanic(r1, c1, r2, c2) {
         case 6:
             assignNewTarget();
             break;
+        case 7:
+            applyConveyorBelt();
+            break;
         default:
             renderBoard();
     }
@@ -811,7 +828,7 @@ function spawnObstacle(time, numberOfStones) {
     for (let i = 0; i < BOARD_ROWS; i++) {
         for (let j = 0; j < BOARD_COLS; j++) {
             // if (board[i][j] !== null) {
-                availablePieces.push({r: i, c: j, id: board[i][j]})
+            availablePieces.push({r: i, c: j, id: board[i][j]})
             // }
         }
     }
@@ -949,4 +966,37 @@ function assignNewTarget() {
 
     targetType.style.fontWeight = '700';
     targetType.style.textDecoration = 'underline';
+}
+
+// ==========================================
+// LEVEL 7: BĂNG CHUYỀN
+// ==========================================
+function applyConveyorBelt() {
+    for (let row = 1; row <= BOARD_ROWS - 2; row++) {
+        // NẾU LÀ HÀNG CHẴN THIF DỊCH SANG PHẢI
+        if ((row % 2) === 0) {
+            // LƯU LẠI PHẦN THỬ CUỐI CỦA HÀNG
+            let lastCell = board[row][BOARD_COLS - 2];
+
+            for (let col = BOARD_COLS - 2; col >= 1; col--) {
+                board[row][col] = board[row][col - 1];
+            }
+
+            // Đưa phần tử cuối cùng lên đầu
+            board[row][1] = lastCell
+        } else {
+            // NẾU LÀ HÀNG LẺ THÌ DỊCH SANG TRÁI
+            // LƯU LẠI PHẦN TỬ ĐẦU TIÊN
+            let firstCell = board[row][1];
+
+            // Chạy từ trái sang phải
+            for (let col = 1; col <= BOARD_COLS - 2; col++) {
+                board[row][col] = board[row][col + 1];
+            }
+
+            // Đưa phần tử đầu tiên ra sau cùng
+            board[row][BOARD_COLS - 2] = firstCell;
+        }
+    }
+    renderBoard();
 }
