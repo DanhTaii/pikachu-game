@@ -13,7 +13,7 @@ let currentTotalPokemon = 0;
 let levelMechanicTimeOut = null;
 
 // CASC BIẾN XỬ LÝ THỜI GIAN
-const TIME_PLAY = 600;
+const TIME_PLAY = 400;
 let remainingTime = 0;
 let timeInterval = null;
 
@@ -23,7 +23,7 @@ let isFlipHorizontal = false;
 let isFlipPieceOver = false;
 let currentTargetType = null;
 
-let totalHint = 10;
+let totalHint = 5;
 
 const levelRule = [
     "Giống luật chung",
@@ -41,7 +41,10 @@ const levelRule = [
     "Người chơi phải nối 2 pokemon theo dạng chỉ định của hệ thống. Gồm có 3 loại đó là: 0 góc, 1 góc, 2 góc",
 
     "Mỗi lần nối thành công 2 quân thì bàn cờ sẽ di chuyển theo quy tắc. Hàng chẵn thì từng quân sẽ dịch chuyển từ trái sang phải 1 ô. " +
-    "Hàng lẻ thì sẽ dịch chuyển từ phải qua trái 1 ô"
+    "Hàng lẻ thì sẽ dịch chuyển từ phải qua trái 1 ô",
+
+    "Trên bàn cờ sẽ có các quân bị đóng băng, nhiệm vụ của bạn là phá những quân bị đóng băng đó bằng cách nối thành công những quân kế bên để phá chúng." +
+    "Thì lúc nay bạn có thể nối nó như bình thường."
 ]
 
 initGame();
@@ -58,6 +61,7 @@ function createEmptyBoard(rows, cols) {
 function shuffle(array) {
     for (let i = array.length - 1; i >= 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
+        // DÙNG DESTRUCTING MÀ THẦY DẠY
         [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
@@ -77,7 +81,7 @@ function shuffleRemaining() {
             let currentPieceId = board[i][j];
 
             // NẾU NÓ KAHSC NULL THÌ
-            if (currentPieceId !== null && currentPieceId !== -1) {
+            if (currentPieceId !== null && currentPieceId !== -1 && !isFrozenPiece(i, j)) {
                 // THÊM ID CỦA NÓ VÀO MẢNG currentPieceIds
                 currentPieceIds[index] = currentPieceId;
                 // THÊM VỊ TRÍ CỦA NÓ VÀO currentPiecePositions
@@ -116,7 +120,7 @@ function ensurePlayableMove() {
     let availablePieces = [];
     for (let i = 1; i <= BOARD_ROWS - 2; i++) {
         for (let j = 1; j <= BOARD_COLS - 2; j++) {
-            if (board[i][j] !== null && board[i][j] !== -1) {
+            if (board[i][j] !== null && board[i][j] !== -1 && !isFrozenPiece(i, j)) {
                 availablePieces.push({row: i, col: j, id: board[i][j]});
             }
         }
@@ -208,7 +212,7 @@ function renderBoard() {
 }
 
 function initGame() {
-    totalHint = 10;
+    totalHint = 5;
     document.getElementById("current-total-hint").textContent = `( ${totalHint} )`;
     // hintButton.style.backgroundColor = 'darkblue';
 
@@ -249,9 +253,10 @@ function initGame() {
 }
 
 function resetGame() {
-    totalHint = 10;
+    totalHint = 5;
     document.getElementById("current-total-hint").textContent = `( ${totalHint} )`;
     hintButton.style.backgroundColor = 'darkblue';
+    hintButton.disabled = false;
 
     currentTotalPokemon = 0;
     isFlipPieceOver = false;
@@ -261,7 +266,7 @@ function resetGame() {
         levelMechanicTimeOut = null;
     }
     boardElement.querySelectorAll(".cell").forEach(cell => {
-        cell.classList.remove("active", "hidden");
+        cell.classList.remove("active", "hidden", "frozen");
     });
     if (stoneTimer !== null) {
         // XÓA BỎ THỜI GIAN ĐANG CHJAY NGẦM
@@ -289,16 +294,19 @@ function resetGame() {
     }
 
     fillBoard();
-    ensurePlayableMove();
-    updateButtonLevelUI(currentLevel)
-    renderBoard();
-
     if (currentLevel === 3) {
-        spawnObstacle(5000, 10)
+        spawnObstacle(5000, 15)
     }
     if (currentLevel === 6) {
         assignNewTarget();
     }
+    if (currentLevel === 8) {
+        frozePiece();
+    }
+    ensurePlayableMove();
+    updateButtonLevelUI(currentLevel)
+    renderBoard();
+
     startTime()
 }
 
@@ -344,12 +352,12 @@ function updateTimerProgress() {
 function handleCellClick(row, col) {
     const currentPieceId = board[row][col];
 
-    if (currentPieceId == null || currentPieceId === -1) {
-        return;
-    }
-
     // LẤY RA Ô TD TRÊN TABLE CỦA CURRENT PIECE
     const currentPieceElement = boardElement.rows[row].cells[col];
+
+    if (currentPieceId == null || currentPieceId === -1 || isFrozenPiece(row, col)) {
+        return;
+    }
 
     // LEVEL 5: chỉ hiện thẻ vừa bấm.
     if (currentLevel === 5 && isFlipPieceOver) {
@@ -379,17 +387,15 @@ function handleCellClick(row, col) {
             }
         }
 
-        // Nếu khác ID thì loại
-        if (board[row][col] !== board[firstSelected.row][firstSelected.col]) {
-            return;
-        }
-
         drawPath(row, col, firstSelected.row, firstSelected.col, path);
 
+        if (currentLevel === 8) {
+            meltingIce(firstSelected.row, firstSelected.col, row, col);
+        }
         removePieceSelection(firstPieceElement, currentPieceElement, firstSelected.row, firstSelected.col, row, col);
 
         if (currentTotalPokemon === 0) {
-            if (currentLevel === 6) {
+            if (currentLevel === levelRule.length) {
                 alert("CHÚC MỪNG BẠN ĐÃ PHÁ ĐẢO GAME");
                 currentLevel = 1;
             } else {
@@ -570,11 +576,16 @@ function isStillHaveConnection() {
         // DANH SÁCH CÁC PIECE DỰA TRÊN INDEX
         let pieceList = groups[index];
         for (let i = 0; i < pieceList.length - 1; i++) {
+            // VỊ TRÍ ĐẦU TRONG INDEX HIỆN TẠI
+            let piece1 = pieceList[i];
+            // KIỂM TRA XEM CÓ BỊ ĐÓNG BĂNG KHÔNG
+            if (isFrozenPiece(piece1.row, piece1.col)) continue;
+
             for (let j = i + 1; j < pieceList.length; j++) {
-                // VỊ TRÍ ĐẦU TRONG INDEX HIỆN TẠI
-                let piece1 = pieceList[i];
                 // VỊ TRÍ THỨ 2 TRONG INDEX HIỆN TẠI SAU VỊ TRÍ ĐẦU
                 let piece2 = pieceList[j];
+                // KIỂM TRA XEM CÓ BỊ ĐÓNG BĂNG KHÔNG
+                if (isFrozenPiece(piece2.row, piece2.col)) continue;
 
                 if (
                     canConnectStraight(piece1.row, piece1.col, piece2.row, piece2.col) === true ||
@@ -774,6 +785,8 @@ function applyLevelMechanic(r1, c1, r2, c2) {
         case 7:
             applyConveyorBelt();
             break;
+        case 8:
+            break;
         default:
             renderBoard();
     }
@@ -926,6 +939,7 @@ function assignNewTarget() {
     let typeConnection = checkConnection(pieceOne.row, pieceOne.col, pieceTwo.row, pieceTwo.col).type;
     ruleElement.style.display = 'block';
     ruleElement.innerHTML = `Mục tiêu là tìm 1 cặp: <div id="target-type"></div>`;
+    ruleElement.style.color = 'red';
     let targetType = document.getElementById('target-type');
 
     if (typeConnection === "straight") {
@@ -941,6 +955,7 @@ function assignNewTarget() {
 
     targetType.style.fontWeight = '700';
     targetType.style.textDecoration = 'underline';
+    targetType.style.color = 'red';
 }
 
 // ==========================================
@@ -974,4 +989,41 @@ function applyConveyorBelt() {
         }
     }
     renderBoard();
+}
+
+// ==========================================
+// LEVEL 8: ĐÓNG BĂNG
+// ==========================================
+function frozePiece() {
+    // TẠO RA 1 ĐỐI TƯỢNG CHỨA CÁC MẢNG
+    let groupPokemon = findGroupPokemon();
+
+    for (let index in groupPokemon) {
+        let currentListIds = groupPokemon[index];
+        let halfCurrentListIds = currentListIds.splice(0, currentListIds.length / 2)
+
+        halfCurrentListIds.forEach(currentPieceId => {
+            boardElement.rows[currentPieceId.row].cells[currentPieceId.col].classList.add("frozen");
+        });
+    }
+}
+
+function isFrozenPiece(row, col) {
+    return boardElement.rows[row].cells[col].classList.contains("frozen");
+}
+
+function meltingIce(r1, c1, r2, c2) {
+    let direction = [[0, 1], [0, -1], [1, 0], [-1, 0]]
+
+    for (let currentPiece of [{row: r1, col: c1}, {row: r2, col: c2}]) {
+        for (let dir of direction) {
+            let nextRow = dir[0] + currentPiece.row;
+            let nextCol = dir[1] + currentPiece.col;
+
+            let nextPieceElement = boardElement.rows[nextRow].cells[nextCol];
+            if (nextPieceElement.classList.contains("frozen")) {
+                nextPieceElement.classList.remove("frozen");
+            }
+        }
+    }
 }
