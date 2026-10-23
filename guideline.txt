@@ -1,0 +1,5 @@
+- Link HDSD:
+https://docs.google.com/document/d/1lp0_U4yH3TrdTT9c6PKGakk_fqqpV5nzRVUpMvvRLa8/edit?usp=sharing
+
+- Link GitHub:
+https://github.com/DanhTaii/pikachu-game

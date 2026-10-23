@@ -43,7 +43,7 @@
         }
 
         .cell.hidden {
-            filter: brightness(14%);
+            filter: brightness(5%);
             cursor: pointer;
         }
 
@@ -59,9 +59,6 @@
         }
 
         body {
-            /*display: flex;*/
-            /*justify-content: center;*/
-            /*align-items: center;*/
             justify-items: center;
             width: 1200px;
             margin: 0 auto;
@@ -70,7 +67,6 @@
         .container {
             display: flex;
             justify-content: center;
-            /*align-items: center;*/
         }
 
         .list-level__container {
@@ -95,6 +91,10 @@
         .hint-button {
             background-color: darkblue;
             color: white;
+        }
+
+        .hint-button p{
+            margin: 2px auto;
         }
 
         button:hover {
@@ -164,7 +164,8 @@
         <ul id="list-level">
             <li>
                 <button id="hint-button" class="hint-button">
-                    GỢI Ý
+                    <p>GỢI Ý</p>
+                    <p id="current-total-hint"></p>
                 </button>
             </li>
         </ul>
