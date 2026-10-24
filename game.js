@@ -2,7 +2,7 @@ const BOARD_ROWS = 11;
 const BOARD_COLS = 18;
 const POKEMON_TYPES = 36;
 const POKEMON_PER_TYPE = 4;
-const CELL_WIDTH = 44;
+const CELL_WIDTH = 40;
 const CELL_HEIGHT = 55;
 
 const boardElement = document.getElementById("board");
@@ -28,23 +28,20 @@ let totalHint = 5;
 const levelRule = [
     "Giống luật chung",
 
-    "Mỗi lần nối thành công 2 pokemon bàn cờ sẽ bị hút xuống dưới",
+    "Sau mỗi lần ghép, các Pokémon phía trên rơi xuống lấp chỗ trống trong cùng cột.",
 
-    "Vật cản sẽ xuất hiện ngẫu nhiên liên tục trên bàn cờ và bạn không thể ăn xuyên vật cản hay phá vật cản",
+    "Cứ 5 giây, 15 vật cản xuất hiện ở vị trí ngẫu nhiên. Không thể ghép xuyên qua vật cản",
 
-    "Mỗi lần nối thành công 2 pokemon bàn cờ sẽ bị lật từ trái sang phải, " +
-    "lần nối thành công tiếp theo sẽ lật sang từ trên xuống và quay lại lần lật đầu tiên rồi cứ thế tiếp tục",
+    "Sau mỗi lần ghép, bàn cờ đảo chiều ngang; lần tiếp theo đảo chiều dọc. Sau đó lặp lại.",
 
-    "Khi trên bàn cờ chỉ còn 1 nửa quân , tức là chỉ còn 72 quân cờ. Bàn cờ sẽ che mờ đi 1 nửa của 72 quân hiện tại. " +
-    "Người chơi có thể di chuyển chuột đến 1 quân đó để xem rõ đó là quân gì",
+    "Khi trên bàn cờ chỉ còn 72 quân cờ. Bàn cờ sẽ che 1 nửa của 72 quân hiện tại. " +
+    "Người chơi có thể rê chuột lên quân để xem hình.",
 
     "Người chơi phải nối 2 pokemon theo dạng chỉ định của hệ thống. Gồm có 3 loại đó là: 0 góc, 1 góc, 2 góc",
 
-    "Mỗi lần nối thành công 2 quân thì bàn cờ sẽ di chuyển theo quy tắc. Hàng chẵn thì từng quân sẽ dịch chuyển từ trái sang phải 1 ô. " +
-    "Hàng lẻ thì sẽ dịch chuyển từ phải qua trái 1 ô",
+    "Hàng chẵn trượt sang phải, hàng lẻ trượt sang trái một ô sau mỗi lần ghép.",
 
-    "Trên bàn cờ sẽ có các quân bị đóng băng, nhiệm vụ của bạn là phá những quân bị đóng băng đó bằng cách nối thành công những quân kế bên để phá chúng." +
-    "Thì lúc nay bạn có thể nối nó như bình thường."
+    "Ghép thành công các quân cạnh quân bị đóng băng sẽ phá băng; quân đó mới ghép được sau khi được giải phóng."
 ]
 
 initGame();
@@ -212,6 +209,7 @@ function renderBoard() {
 }
 
 function initGame() {
+    document.getElementById("level-rule__target").style.display = 'none'
     totalHint = 5;
     document.getElementById("current-total-hint").textContent = `( ${totalHint} )`;
     // hintButton.style.backgroundColor = 'darkblue';

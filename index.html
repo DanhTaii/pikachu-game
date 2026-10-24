@@ -69,6 +69,14 @@
             justify-items: center;
             width: 1200px;
             margin: 0 auto;
+            background-color: #F3F7FF;
+        }
+
+        .board-container {
+            background-color: white;
+            border-radius: 10px;
+            margin: 36px;
+            border: 1px solid #c8c4c4;
         }
 
         .container {
@@ -77,7 +85,7 @@
         }
 
         .list-level__container {
-            margin-top: 47px;
+            margin-top: 36px;
         }
 
         ul {
@@ -91,8 +99,17 @@
         }
 
         button {
-            font-size: 20px;
+            font-size: 15px;
             width: 100%;
+            background-color: white;
+            border: 1px solid #c8c4c4;
+            border-radius: 8px;
+            padding: 6px;
+        }
+
+        button:hover {
+            /*filter: brightness(80%);*/
+            transform: translateY(-2px);
         }
 
         .hint-button {
@@ -118,7 +135,7 @@
             position: relative;
             width: 60%;
             height: 15px;
-            background-color: #e5e3e3;
+            background-color: white;
             /*box-shadow: inset 0 1px 3px ;*/
             border-radius: 50px;
             border: 2px solid black;
@@ -136,19 +153,19 @@
         }
 
         .guideline {
-            border: 1px solid black;
-            background-color: #e9e6e6;
+            border: 1px solid #c8c4c4;
+            background-color: white;
             padding: 10px;
-            margin-top: 60px;
-            /*min-height: 50px;*/
-            height: 515px;
-            border-radius: 2px;
+            margin: 36px 0;
+            height: auto;
+            border-radius: 8px;
             width: 200px;
         }
 
         .guideline .rule-title {
             font-size: 20px;
             font-weight: 600;
+            color: darkblue;
         }
 
         .guideline .rule-subtitle {
@@ -157,6 +174,9 @@
 
         .level-rule__section .rule-content {
             margin: 12px 0;
+            border: 1px solid #c8c4c4;
+            border-radius: 8px;
+            padding: 10px;
         }
     </style>
 </head>
@@ -178,9 +198,12 @@
         </ul>
     </div>
 
-    <table id="board" style="margin: 0 auto">
+    <div class="board-container">
+        <table id="board" style="margin: 0 auto">
 
-    </table>
+        </table>
+    </div>
+
 
     <div id="guideline" class="guideline">
         <span class="rule-title">HƯỚNG DẪN</span>
@@ -188,8 +211,8 @@
         <div id="level-rule__base" class="level-rule__base level-rule__section">
             <div class="rule-subtitle">LUẬT CHUNG:</div>
             <div class="rule-content">Chọn 2 pokemon giống nhau để nối</div>
-            <div class="rule-content">Chỉ được nối tối đa là 2 góc</div>
-            <div class="rule-content">Nối hết trong thời gian quy định thì thắng, còn không thì sẽ thua</div>
+            <div class="rule-content">Đường nối không được đi xuyên qua Pokémon khác và được rẽ tối đa hai lần (hai góc).</div>
+            <div class="rule-content">Ghép hết Pokémon trước khi hết 400 giây thì thắng.</div>
         </div>
         <hr>
         <div id="level-rule__current" class="level-rule__current level-rule__section">
