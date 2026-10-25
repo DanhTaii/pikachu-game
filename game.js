@@ -2,7 +2,7 @@ const BOARD_ROWS = 11;
 const BOARD_COLS = 18;
 const POKEMON_TYPES = 36;
 const POKEMON_PER_TYPE = 4;
-const CELL_WIDTH = 40;
+const CELL_WIDTH = 41;
 const CELL_HEIGHT = 55;
 
 const boardElement = document.getElementById("board");
