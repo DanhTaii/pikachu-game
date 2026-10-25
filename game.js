@@ -17,6 +17,11 @@ const TIME_PLAY = 400;
 let remainingTime = 0;
 let timeInterval = null;
 
+let timePieceUp = null;
+let isMapRevealed = false;
+let currentMatchedSuccess = 0;
+let coveredCells = [];
+
 let hiddenPieces = []
 let stoneTimer = null;
 let isFlipHorizontal = false;
@@ -34,8 +39,8 @@ const levelRule = [
 
     "Sau mỗi lần ghép, bàn cờ đảo chiều ngang; lần tiếp theo đảo chiều dọc. Sau đó lặp lại.",
 
-    "Khi trên bàn cờ chỉ còn 72 quân cờ. Bàn cờ sẽ che 1 nửa của 72 quân hiện tại. " +
-    "Người chơi có thể rê chuột lên quân để xem hình.",
+    "Từ đầu màn, một nửa số quân Pokémon bị che. Rê chuột lên quân để xem hình. " +
+    "Ghép đúng 3 cặp có ít nhất một quân bị che để mở sáng toàn bộ bàn cờ trong 2 giây; sau đó quân bị che sẽ úp lại.",
 
     "Người chơi phải nối 2 pokemon theo dạng chỉ định của hệ thống. Gồm có 3 loại đó là: 0 góc, 1 góc, 2 góc",
 
@@ -256,6 +261,14 @@ function resetGame() {
     hintButton.style.backgroundColor = 'darkblue';
     hintButton.disabled = false;
 
+    currentMatchedSuccess = 0;
+    isMapRevealed = false;
+    coveredCells = [];
+    if (timePieceUp !== null) {
+        clearTimeout(timePieceUp);
+        timePieceUp = null;
+    }
+
     currentTotalPokemon = 0;
     isFlipPieceOver = false;
     ruleElement.style.display = 'none'
@@ -295,6 +308,11 @@ function resetGame() {
     if (currentLevel === 3) {
         spawnObstacle(5000, 15)
     }
+
+    if (currentLevel === 5) {
+        flipPieceOver();
+    }
+
     if (currentLevel === 6) {
         assignNewTarget();
     }
@@ -352,6 +370,7 @@ function handleCellClick(row, col) {
 
     // LẤY RA Ô TD TRÊN TABLE CỦA CURRENT PIECE
     const currentPieceElement = boardElement.rows[row].cells[col];
+    const currentPieceWasHidden = currentPieceElement.classList.contains("hidden");
 
     if (currentPieceId == null || currentPieceId === -1 || isFrozenPiece(row, col)) {
         return;
@@ -364,7 +383,7 @@ function handleCellClick(row, col) {
 
     // NẾU NHƯ CHƯA CHỌN PIECE NÀO THÌ GÁN CHO FIRST PIECE
     if (!firstSelected) {
-        selectPiece(row, col, currentPieceId)
+        selectPiece(row, col, currentPieceId, currentPieceWasHidden);
         return;
     }
 
@@ -374,13 +393,23 @@ function handleCellClick(row, col) {
     if (currentPieceId === firstSelected.id) {
         let path = checkConnection(row, col, firstSelected.row, firstSelected.col);
         if (path === null) {
-            replaceSelection(row, col, currentPieceId, false);
+            replaceSelection(row, col, currentPieceId, currentPieceWasHidden);
             return;
+        }
+
+        if (currentLevel === 5 && !isMapRevealed) {
+            const matchedHiddenPiece = currentPieceWasHidden || firstSelected.wasHidden;
+            if (matchedHiddenPiece) {
+                currentMatchedSuccess++;
+            }
+            if (currentMatchedSuccess >= 3) {
+                flipPieceUp();
+            }
         }
 
         if (currentLevel === 6) {
             if (currentTargetType !== path.type) {
-                replaceSelection(row, col, currentPieceId, false);
+                replaceSelection(row, col, currentPieceId, currentPieceWasHidden);
                 return;
             }
         }
@@ -428,25 +457,29 @@ function handleCellClick(row, col) {
         }, 200);
 
     } else {
-        replaceSelection(row, col, currentPieceId, true);
+        replaceSelection(row, col, currentPieceId, currentPieceWasHidden);
     }
 
 }
 
-function selectPiece(row, col, pieceId) {
-    firstSelected = {row, col, id: pieceId};
+function selectPiece(row, col, pieceId, wasPieceHidden) {
+    let wasHidden = false;
+    if (wasPieceHidden) {
+        wasHidden = true;
+    }
+    firstSelected = {row, col, id: pieceId, wasHidden: wasHidden};
     boardElement.rows[row].cells[col].classList.add("active");
 }
 
-function replaceSelection(row, col, pieceId, hidePrevious) {
+function replaceSelection(row, col, pieceId, wasPieceHidden) {
     const previousElement = boardElement.rows[firstSelected.row].cells[firstSelected.col];
 
-    if (hidePrevious && currentLevel === 5 && isFlipPieceOver) {
+    if (currentLevel === 5 && isFlipPieceOver && firstSelected.wasHidden && !isMapRevealed) {
         previousElement.classList.add("hidden");
     }
 
     previousElement.classList.remove("active");
-    selectPiece(row, col, pieceId);
+    selectPiece(row, col, pieceId, wasPieceHidden);
 }
 
 function removePieceSelection(firstPieceElement, currentPieceElement, firstRow, firstCol, secondRow, secondCol) {
@@ -904,8 +937,7 @@ function flipBoardHorizontal() {
 // LEVEL 5: LẬT ÚP
 // ==========================================
 function flipPieceOver() {
-    if (currentTotalPokemon === (144 / 2) && !isFlipPieceOver) {
-
+    if (!isFlipPieceOver) {
         // TẠO RA 1 ĐỐI TƯỢNG CHỨA CÁC MẢNG
         let groupPokemon = findGroupPokemon();
 
@@ -915,10 +947,30 @@ function flipPieceOver() {
 
             halfCurrentListIds.forEach(currentPieceId => {
                 boardElement.rows[currentPieceId.row].cells[currentPieceId.col].classList.add("hidden");
+                coveredCells.push({row: currentPieceId.row, col: currentPieceId.col});
             });
         }
         isFlipPieceOver = true;
     }
+}
+
+function flipPieceUp() {
+    currentMatchedSuccess = 0;
+    isMapRevealed = true;
+
+    boardElement.querySelectorAll(".cell.hidden").forEach(cell => {
+        cell.classList.remove("hidden");
+    });
+
+    timePieceUp = setTimeout(() => {
+        coveredCells.forEach(({row, col}) => {
+            if (board[row][col] !== null && board[row][col] !== -1) {
+                boardElement.rows[row].cells[col].classList.add("hidden");
+            }
+        });
+        isMapRevealed = false;
+        timePieceUp = null;
+    }, 2000);
 }
 
 // ==========================================
