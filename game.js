@@ -13,7 +13,7 @@ let currentTotalPokemon = 0;
 let levelMechanicTimeOut = null;
 
 // CASC BIẾN XỬ LÝ THỜI GIAN
-const TIME_PLAY = 480;
+const TIME_PLAY = 600;
 let remainingTime = 0;
 let timeInterval = null;
 
@@ -40,7 +40,7 @@ const levelRule = [
     "Sau mỗi lần ghép, bàn cờ đảo chiều ngang; lần tiếp theo đảo chiều dọc. Sau đó lặp lại.",
 
     "Từ đầu màn, một nửa số quân Pokémon bị che. Rê chuột lên quân để xem hình. " +
-    "Ghép đúng 3 cặp có ít nhất một quân bị che để mở sáng toàn bộ bàn cờ trong 2 giây; sau đó quân bị che sẽ úp lại.",
+    "Ghép đúng 3 cặp có ít nhất một quân bị che để mở sáng toàn bộ bàn cờ trong 5 giây; sau đó quân bị che sẽ úp lại.",
 
     "Người chơi phải nối 2 pokemon theo dạng chỉ định của hệ thống. Gồm có 3 loại đó là: 0 góc, 1 góc, 2 góc",
 
@@ -306,7 +306,7 @@ function resetGame() {
 
     fillBoard();
     if (currentLevel === 3) {
-        spawnObstacle(5000, 15)
+        spawnObstacle(6000, 15)
     }
 
     if (currentLevel === 5) {
@@ -970,7 +970,7 @@ function flipPieceUp() {
         });
         isMapRevealed = false;
         timePieceUp = null;
-    }, 2000);
+    }, 5000);
 }
 
 // ==========================================
