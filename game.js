@@ -13,7 +13,7 @@ let currentTotalPokemon = 0;
 let levelMechanicTimeOut = null;
 
 // CASC BIẾN XỬ LÝ THỜI GIAN
-const TIME_PLAY = 400;
+const TIME_PLAY = 480;
 let remainingTime = 0;
 let timeInterval = null;
 
